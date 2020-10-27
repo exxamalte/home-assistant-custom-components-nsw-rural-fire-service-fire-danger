@@ -6,7 +6,8 @@
   "requirements": [
     "xmltodict>=0.11.0"
   ],
-  "dependencies": ["rest"],
+  "dependencies": [],
+  "after_dependencies": ["rest"],
   "config_flow": true,
   "codeowners": [
     "@exxamalte"
