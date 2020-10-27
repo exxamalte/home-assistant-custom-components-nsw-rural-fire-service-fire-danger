@@ -24,7 +24,15 @@ SENSOR_ATTRIBUTES = {
 }
 
 BINARY_SENSOR_TYPES = ["fire_ban_today", "fire_ban_tomorrow"]
-SENSOR_TYPES = {"danger_level_today": "Danger Level Today", "danger_level_tomorrow": "Danger Level Tomorrow"}
+SENSOR_TYPES = ["danger_level_today", "danger_level_tomorrow"]
+TYPES = {
+    "danger_level_today": "Danger Level Today",
+    "danger_level_tomorrow": "Danger Level Tomorrow",
+    "fire_ban_today": "Fire Ban Today",
+    "fire_ban_tomorrow": "Fire Ban Tomorrow",
+}
+
+COMPONENTS = ["binary_sensor", "sensor"]
 
 URL = "http://www.rfs.nsw.gov.au/feeds/fdrToban.xml"
 

@@ -26,6 +26,7 @@ from .const import (
     XML_DISTRICT,
     XML_NAME,
     SENSOR_ATTRIBUTES,
+    COMPONENTS,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -84,12 +85,20 @@ async def async_setup_entry(hass, config_entry):
 
 async def async_unload_entry(hass, config_entry):
     """Unload an NSW Rural Fire Service Fire Danger component config entry."""
-    manager = hass.data[DOMAIN].pop(config_entry.entry_id)
-    await manager.async_stop()
-    await asyncio.wait(
-        [hass.config_entries.async_forward_entry_unload(config_entry, "sensor")]
+    unload_ok = all(
+        await asyncio.gather(
+            *[
+                hass.config_entries.async_forward_entry_unload(config_entry, component)
+                for component in COMPONENTS
+            ]
+        )
     )
-    return True
+    if unload_ok:
+        manager = hass.data[DOMAIN].pop(config_entry.entry_id)
+        await manager.async_stop()
+        hass.data[DOMAIN].pop(config_entry.entry_id)
+
+    return unload_ok
 
 
 class NswRfsFireDangerFeedEntityManager:
@@ -100,15 +109,6 @@ class NswRfsFireDangerFeedEntityManager:
         self._hass = hass
         self._config_entry = config_entry
         self._district_name = config_entry.data[CONF_DISTRICT_NAME]
-        # websession = aiohttp_client.async_get_clientsession(hass)
-        # self._feed_manager = GeonetnzVolcanoFeedManager(
-        #     websession,
-        #     self._generate_entity,
-        #     self._update_entity,
-        #     self._remove_entity,
-        #     coordinates,
-        #     filter_radius=radius_in_km,
-        # )
         self._config_entry_id = config_entry.entry_id
         self._scan_interval = timedelta(seconds=config_entry.data[CONF_SCAN_INTERVAL])
         self._track_time_remove_callback = None
@@ -129,11 +129,12 @@ class NswRfsFireDangerFeedEntityManager:
     async def async_init(self):
         """Schedule initial and regular updates based on configured time interval."""
 
-        self._hass.async_create_task(
-            self._hass.config_entries.async_forward_entry_setup(
-                self._config_entry, "sensor"
+        for component in COMPONENTS:
+            self._hass.async_create_task(
+                self._hass.config_entries.async_forward_entry_setup(
+                    self._config_entry, component
+                )
             )
-        )
 
         async def update(event_time):
             """Update."""
