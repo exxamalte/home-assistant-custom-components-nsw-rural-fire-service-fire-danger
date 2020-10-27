@@ -34,7 +34,7 @@ class NswRuralFireServiceFireDangerFlowHandler(
     async def _show_form(self, errors=None):
         """Show the form to the user."""
         data_schema = vol.Schema(
-            {vol.Required(CONF_DISTRICT_NAME): cv.enum(VALID_DISTRICT_NAMES)}
+            {vol.Required(CONF_DISTRICT_NAME): vol.In(VALID_DISTRICT_NAMES)}
         )
 
         return self.async_show_form(
