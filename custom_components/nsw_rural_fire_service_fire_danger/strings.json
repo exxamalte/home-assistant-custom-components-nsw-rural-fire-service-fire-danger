@@ -1,0 +1,11 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Fill in your details.",
+        "data": { "district_name": "District" }
+      }
+    },
+    "abort": { "already_configured": "[%key:common::config_flow::abort::already_configured_location%]" }
+  }
+}
