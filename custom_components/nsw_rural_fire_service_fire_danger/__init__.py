@@ -78,6 +78,7 @@ async def async_setup_entry(hass, config_entry):
     hass.data[DOMAIN][config_entry.entry_id] = manager
     _LOGGER.debug("Feed entity manager added for %s", config_entry.entry_id)
     await manager.async_init()
+    await manager.async_update()
     return True
 
 
@@ -113,11 +114,17 @@ class NswRfsFireDangerFeedEntityManager:
         self._track_time_remove_callback = None
         self.listeners = []
         self._rest = RestData(DEFAULT_METHOD, URL, None, None, None, DEFAULT_VERIFY_SSL)
+        self._attributes = None
 
     @property
     def district_name(self):
         """Return the district name of the manager."""
         return self._district_name
+
+    @property
+    def attributes(self):
+        """Return the district name of the manager."""
+        return self._attributes
 
     async def async_init(self):
         """Schedule initial and regular updates based on configured time interval."""
@@ -139,11 +146,6 @@ class NswRfsFireDangerFeedEntityManager:
 
         _LOGGER.debug("Feed entity manager initialized")
 
-    # async def async_update(self):
-    #     """Refresh data."""
-    #     # await self._feed_manager.update()
-    #     _LOGGER.debug("Feed entity manager updated")
-
     @staticmethod
     def _attribute_in_structure(obj, keys):
         """Return the attribute found under the chain of keys."""
@@ -159,12 +161,10 @@ class NswRfsFireDangerFeedEntityManager:
 
     async def async_update(self):
         """Get the latest data from REST API and update the state."""
+        _LOGGER.debug("Start updating feed")
         await self._rest.async_update()
         value = self._rest.data
-        attributes = {
-            # "district": self._district_name,
-            # ATTR_ATTRIBUTION: DEFAULT_ATTRIBUTION,
-        }
+        attributes = {}
         self._state = STATE_UNKNOWN
         if value:
             try:
@@ -188,23 +188,18 @@ class NswRfsFireDangerFeedEntityManager:
                                             SENSOR_ATTRIBUTES[key][0]
                                         ] = text_value
                                 self._state = STATE_OK
+                                self._attributes = attributes
                                 # Dispatch to sensors.
-                                async_dispatcher_send(
-                                    self._hass,
-                                    f"nsw_rfs_fire_danger_update_{self._district_name}_fire_ban_today",
-                                    SENSOR_ATTRIBUTES["FireBanToday"],
-                                    attributes,
+                                _LOGGER.debug(
+                                    f"Notifying: nsw_rfs_fire_danger_update_{self._district_name}"
                                 )
                                 async_dispatcher_send(
                                     self._hass,
-                                    f"nsw_rfs_fire_danger_update_{self._district_name}_fire_ban_tomorrow",
-                                    SENSOR_ATTRIBUTES["FireBanTomorrow"],
-                                    attributes,
+                                    f"nsw_rfs_fire_danger_update_{self._district_name}",
                                 )
                                 break
             except ExpatError as ex:
                 _LOGGER.warning("Unable to parse XML data: %s", ex)
-        self._attributes = attributes
 
     async def async_stop(self):
         """Stop this feed entity manager from refreshing."""

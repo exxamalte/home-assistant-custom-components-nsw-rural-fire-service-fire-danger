@@ -4,7 +4,6 @@ import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.const import CONF_SCAN_INTERVAL
 from homeassistant.core import callback
-from homeassistant.helpers import config_validation as cv
 
 from .const import (
     DEFAULT_SCAN_INTERVAL,
