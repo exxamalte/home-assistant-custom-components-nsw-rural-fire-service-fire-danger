@@ -23,7 +23,7 @@ and search for "NSW Rural Fire Service - Fire Danger".
 You have to select your district from the list and then hit "Submit".
 
 All entities will be generated automatically and the state will be updated
-every 5 minutes from the external feed.
+every 15 minutes from the external feed.
 
 
 The following attributes will be available with each entity.
@@ -38,7 +38,7 @@ The following attributes will be available with each entity.
 | fire_ban_today        | Indicates whether there is a fire ban today |
 | fire_ban_tomorrow     | Indicates whether there is a fire ban today |
 
-Please note: Over the winter period, the Rural Fire Service typically does not
+**Please note:** Over the winter period, the Rural Fire Service typically does not
 publish any fire danger rating, and this component just shows "None" as fire
 danger level.
 
@@ -48,10 +48,12 @@ danger level.
 Please [have a look at my blog](https://neon.ninja/2019/02/fire-danger-rating/) 
 which is showcasing an earlier version of this component.
 
+**Please note:** If you have previously used the [custom component published on my
+GitHub repository](https://github.com/exxamalte/home-assistant-customisations/tree/master/nsw-rural-fire-service-fire-danger), 
+please remove this manually including any template sensors you created.
 
-## Configuration Example
 
-### Fire Danger Sensor
+## Configuration Details
 
 The following [districts are supported by this integration](http://www.rfs.nsw.gov.au/feeds/fdrToban.xml):
 * Far North Coast
