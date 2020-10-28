@@ -54,7 +54,7 @@ class NswRuralFireServiceFireDangerFlowHandler(
         self._abort_if_unique_id_configured()
 
         if identifier in configured_instances(self.hass):
-            return await self._show_form({"base": "already_configured"})
+            return self.async_abort(reason="already_configured")
 
         scan_interval = user_input.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
         user_input[CONF_SCAN_INTERVAL] = scan_interval.seconds
