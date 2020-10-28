@@ -1,5 +1,6 @@
 """NSW Rural Fire Service - Fire Danger - Entity."""
 import logging
+from typing import Optional
 
 from homeassistant.const import STATE_UNKNOWN, ATTR_ATTRIBUTION
 from homeassistant.core import callback
@@ -14,12 +15,13 @@ _LOGGER = logging.getLogger(__name__)
 class NswFireServiceFireDangerEntity(Entity):
     """Implementation of a generic entity."""
 
-    def __init__(self, hass, manager, sensor_type):
+    def __init__(self, hass, manager, sensor_type, config_entry_unique_id):
         """Initialize the entity."""
         self._hass = hass
         self._manager = manager
         self._district_name = manager.district_name
         self._sensor_type = sensor_type
+        self._config_entry_unique_id = config_entry_unique_id
         self._name = f"Fire Danger in {self._district_name} {TYPES[self._sensor_type]}"
         self._state = STATE_UNKNOWN
         self._attributes = {
@@ -68,6 +70,11 @@ class NswFireServiceFireDangerEntity(Entity):
     def name(self):
         """Return the name of the sensor."""
         return self._name
+
+    @property
+    def unique_id(self) -> Optional[str]:
+        """Return a unique ID containing latitude/longitude and external id."""
+        return f"{self._config_entry_unique_id}_{self._sensor_type}"
 
     @property
     def force_update(self):

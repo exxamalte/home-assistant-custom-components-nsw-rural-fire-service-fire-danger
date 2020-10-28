@@ -50,6 +50,9 @@ class NswRuralFireServiceFireDangerFlowHandler(
             return await self._show_form()
 
         identifier = f"{user_input[CONF_DISTRICT_NAME]}"
+        await self.async_set_unique_id(identifier)
+        self._abort_if_unique_id_configured()
+
         if identifier in configured_instances(self.hass):
             return await self._show_form({"base": "already_configured"})
 

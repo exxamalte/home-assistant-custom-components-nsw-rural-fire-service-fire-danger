@@ -6,6 +6,7 @@ from pyexpat import ExpatError
 
 import voluptuous as vol
 import xmltodict
+from homeassistant import config_entries, core
 from homeassistant.components.rest.data import RestData
 
 from homeassistant.config_entries import SOURCE_IMPORT
@@ -46,16 +47,14 @@ CONFIG_SCHEMA = vol.Schema(
 )
 
 
-async def async_setup(hass, config):
+async def async_setup(hass: core.HomeAssistant, config):
     """Set up the NSW Rural Fire Service Fire Danger component."""
     if DOMAIN not in config:
         return True
 
     conf = config[DOMAIN]
-
     district_name = conf.get[CONF_DISTRICT_NAME]
     scan_interval = conf[CONF_SCAN_INTERVAL]
-
     identifier = f"{district_name}"
     if identifier in configured_instances(hass):
         return True
@@ -67,11 +66,12 @@ async def async_setup(hass, config):
             data={CONF_DISTRICT_NAME: district_name, CONF_SCAN_INTERVAL: scan_interval},
         )
     )
-
     return True
 
 
-async def async_setup_entry(hass, config_entry):
+async def async_setup_entry(
+    hass: core.HomeAssistant, config_entry: config_entries.ConfigEntry
+):
     """Set up the NSW Rural Fire Service Fire Danger component as config entry."""
     hass.data.setdefault(DOMAIN, {})
     # Create feed entity manager for all platforms.
@@ -96,8 +96,6 @@ async def async_unload_entry(hass, config_entry):
     if unload_ok:
         manager = hass.data[DOMAIN].pop(config_entry.entry_id)
         await manager.async_stop()
-        hass.data[DOMAIN].pop(config_entry.entry_id)
-
     return unload_ok
 
 
@@ -112,7 +110,6 @@ class NswRfsFireDangerFeedEntityManager:
         self._config_entry_id = config_entry.entry_id
         self._scan_interval = timedelta(seconds=config_entry.data[CONF_SCAN_INTERVAL])
         self._track_time_remove_callback = None
-        self.listeners = []
         self._rest = RestData(DEFAULT_METHOD, URL, None, None, None, DEFAULT_VERIFY_SSL)
         self._attributes = None
 
@@ -204,9 +201,6 @@ class NswRfsFireDangerFeedEntityManager:
 
     async def async_stop(self):
         """Stop this feed entity manager from refreshing."""
-        for unsub_dispatcher in self.listeners:
-            unsub_dispatcher()
-        self.listeners = []
         if self._track_time_remove_callback:
             self._track_time_remove_callback()
         _LOGGER.debug("Feed entity manager stopped")
