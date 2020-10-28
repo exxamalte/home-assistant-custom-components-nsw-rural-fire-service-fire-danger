@@ -11,9 +11,10 @@ from homeassistant.components.rest.data import RestData
 from homeassistant.config_entries import SOURCE_IMPORT, ConfigEntry
 from homeassistant.const import CONF_SCAN_INTERVAL, STATE_OK, STATE_UNKNOWN
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers import config_validation as cv, ConfigType
+from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.dispatcher import async_dispatcher_send
 from homeassistant.helpers.event import async_track_time_interval
+from homeassistant.helpers.typing import ConfigType
 
 from .config_flow import configured_instances
 from .const import (
@@ -47,7 +48,7 @@ CONFIG_SCHEMA = vol.Schema(
 )
 
 
-async def async_setup(hass: HomeAssistant, config: ConfigType):
+async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Set up the NSW Rural Fire Service Fire Danger component."""
     if DOMAIN not in config:
         return True
