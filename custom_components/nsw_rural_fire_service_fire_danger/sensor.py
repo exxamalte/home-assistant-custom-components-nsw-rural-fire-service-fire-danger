@@ -1,5 +1,6 @@
 """NSW Rural Fire Service - Fire Danger - Sensor."""
 import logging
+from typing import Optional
 
 from .const import DOMAIN, SENSOR_TYPES
 from .entity import NswFireServiceFireDangerEntity
@@ -34,3 +35,8 @@ class NswFireServiceFireDangerSensor(NswFireServiceFireDangerEntity):
     def state(self):
         """Return the state of the device."""
         return self._state
+
+    @property
+    def icon(self) -> Optional[str]:
+        """Return the icon to use in the frontend, if any."""
+        return "mdi:speedometer"
