@@ -39,4 +39,4 @@ class NswFireServiceFireDangerSensor(NswFireServiceFireDangerEntity):
     @property
     def icon(self) -> Optional[str]:
         """Return the icon to use in the frontend, if any."""
-        return "mdi:speedometer"
+        return "mdi:speedometer-medium"
