@@ -6,12 +6,12 @@ from pyexpat import ExpatError
 
 import voluptuous as vol
 import xmltodict
-from homeassistant import config_entries, core
 from homeassistant.components.rest.data import RestData
 
-from homeassistant.config_entries import SOURCE_IMPORT
+from homeassistant.config_entries import SOURCE_IMPORT, ConfigEntry
 from homeassistant.const import CONF_SCAN_INTERVAL, STATE_OK, STATE_UNKNOWN
-from homeassistant.helpers import config_validation as cv
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers import config_validation as cv, ConfigType
 from homeassistant.helpers.dispatcher import async_dispatcher_send
 from homeassistant.helpers.event import async_track_time_interval
 
@@ -47,7 +47,7 @@ CONFIG_SCHEMA = vol.Schema(
 )
 
 
-async def async_setup(hass: core.HomeAssistant, config):
+async def async_setup(hass: HomeAssistant, config: ConfigType):
     """Set up the NSW Rural Fire Service Fire Danger component."""
     if DOMAIN not in config:
         return True
@@ -69,9 +69,7 @@ async def async_setup(hass: core.HomeAssistant, config):
     return True
 
 
-async def async_setup_entry(
-    hass: core.HomeAssistant, config_entry: config_entries.ConfigEntry
-):
+async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry):
     """Set up the NSW Rural Fire Service Fire Danger component as config entry."""
     hass.data.setdefault(DOMAIN, {})
     # Create feed entity manager for all platforms.
@@ -83,7 +81,7 @@ async def async_setup_entry(
     return True
 
 
-async def async_unload_entry(hass, config_entry):
+async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry):
     """Unload an NSW Rural Fire Service Fire Danger component config entry."""
     unload_ok = all(
         await asyncio.gather(
@@ -102,7 +100,7 @@ async def async_unload_entry(hass, config_entry):
 class NswRfsFireDangerFeedEntityManager:
     """Feed Entity Manager for NSW Rural Fire Service Fire Danger feed."""
 
-    def __init__(self, hass, config_entry):
+    def __init__(self, hass: HomeAssistant, config_entry: ConfigEntry):
         """Initialize the Feed Entity Manager."""
         self._hass = hass
         self._config_entry = config_entry
@@ -114,7 +112,7 @@ class NswRfsFireDangerFeedEntityManager:
         self._attributes = None
 
     @property
-    def district_name(self):
+    def district_name(self) -> str:
         """Return the district name of the manager."""
         return self._district_name
 
@@ -188,16 +186,13 @@ class NswRfsFireDangerFeedEntityManager:
                                 self._state = STATE_OK
                                 self._attributes = attributes
                                 # Dispatch to sensors.
-                                _LOGGER.debug(
-                                    f"Notifying: nsw_rfs_fire_danger_update_{self._district_name}"
-                                )
                                 async_dispatcher_send(
                                     self._hass,
                                     f"nsw_rfs_fire_danger_update_{self._district_name}",
                                 )
                                 break
             except ExpatError as ex:
-                _LOGGER.warning("Unable to parse XML data: %s", ex)
+                _LOGGER.warning("Unable to parse feed data: %s", ex)
 
     async def async_stop(self):
         """Stop this feed entity manager from refreshing."""
