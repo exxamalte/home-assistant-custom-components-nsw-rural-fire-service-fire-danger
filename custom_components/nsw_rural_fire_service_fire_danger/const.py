@@ -8,7 +8,7 @@ DEFAULT_ATTRIBUTION = "NSW Rural Fire Service"
 DEFAULT_FORCE_UPDATE = True
 DEFAULT_METHOD = "GET"
 DEFAULT_NAME = "Fire Danger"
-DEFAULT_SCAN_INTERVAL = timedelta(minutes=5)
+DEFAULT_SCAN_INTERVAL = timedelta(minutes=15)
 DEFAULT_VERIFY_SSL = True
 
 DOMAIN = "nsw_rural_fire_service_fire_danger"
