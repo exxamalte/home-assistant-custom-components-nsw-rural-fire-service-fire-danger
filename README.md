@@ -6,57 +6,27 @@
 [![Buy me a coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg)](https://www.buymeacoffee.com/neonninja)
 [![neon.ninja](https://img.shields.io/badge/blog-neon.ninja-blue)](https://neon.ninja/2019/02/fire-danger-rating/)
 
-The NSW Rural Fire Service provides an [XML feed](http://www.rfs.nsw.gov.au/feeds/fdrToban.xml) that contains the fire danger
-details for today and tomorrow for districts in the state.
+The New South Wales Rural Fire Service provides an 
+[XML feed](http://www.rfs.nsw.gov.au/feeds/fdrToban.xml) that contains the 
+fire danger details for today and tomorrow for districts in the state.
 
-This custom component is implemented as a simple sensor that fetches the feed
-and stores all details of the configured district. You can then use template
-sensors to present these details in Home Assistant as you like.
-
-Please note: This version is compatible with Home Assistant version 0.117 onwards.
+This custom component automatically generates 4 entities:
+* Danger level today
+* Danger level tomorrow
+* Fire ban today
+* Fire ban tomorrow
 
 ## Installation
 
-### Install custom component code
-In your [configuration folder](https://www.home-assistant.io/docs/configuration/)
-create subfolder `<config>/custom_components` and copy the folder
-`nsw_rural_fire_service_fire_danger` into the new `custom_components` folder.
+Install this component via HACS, the go to "Configuration" -> "Integrations"
+and search for "NSW Rural Fire Service - Fire Danger".
+You have to select your district from the list and then hit "Submit".
 
-Please note: This folder structure will work at least from Home Assistant 
-version 0.88 onwards. If you are using an older version, you will need to create
-sub-folders `<config>/custom_components/sensor` and move the `sensor.py` file
-in there and rename it to `nsw_rural_fire_service_fire_danger.py`.
-
-### Install dependencies
-This custom component comes with its own `manifest.json` and thus dependencies
-should be installed automatically. 
-
-Both third-party libraries are also used by the `rest` integration, so they
-are likely already installed if you are using that integration.
+All entities will be generated automatically and the state will be updated
+every 15 minutes from the external feed.
 
 
-## Configuration Example
-
-
-### Fire Danger Sensor
-
-Have a look at the XML feed at http://www.rfs.nsw.gov.au/feeds/fdrToban.xml
-and find your district. The district's name must be configured as 
-`district_name` as shown in the following example:
-
-```yaml
-sensor:
-  - platform: nsw_rural_fire_service_fire_danger
-    district_name: Greater Sydney Region
-```
-
-The above configuration will generate a sensor with entity id 
-`sensor.fire_danger_in_greater_sydney_region` which is further used in the
-examples below.
-
-The sensor's state will either be `ok` or `unknown` if no data could be retrieved.
-
-The following attributes will be available for use in `template` sensors.
+The following attributes will be available with each entity.
 
 | Attribute             | Description                                 |
 |-----------------------|---------------------------------------------|
@@ -68,26 +38,42 @@ The following attributes will be available for use in `template` sensors.
 | fire_ban_today        | Indicates whether there is a fire ban today |
 | fire_ban_tomorrow     | Indicates whether there is a fire ban today |
 
+**Please note:** Over the winter period, the Rural Fire Service typically does not
+publish any fire danger rating, and this component just shows "None" as fire
+danger level.
 
-### Danger Level Today
 
-```yaml
-sensor:
-  - platform: template
-    sensors:
-      fire_danger_level_today:
-        friendly_name: "Danger Level Today"
-        value_template: "{{ state_attr('sensor.fire_danger_in_greater_sydney_region', 'danger_level_today') }}"
-        icon_template: mdi:speedometer
-```
+## More Information
 
-### Fire Ban Today
-```yaml
-binary_sensor:
-  - platform: template
-    sensors:
-      fire_ban_today:
-        friendly_name: "Fire Ban Today"
-        value_template: "{{ state_attr('sensor.fire_danger_in_greater_sydney_region', 'fire_ban_today') }}"
-        device_class: safety
-```
+Please [have a look at my blog](https://neon.ninja/2019/02/fire-danger-rating/) 
+which is showcasing an earlier version of this component.
+
+**Please note:** If you have previously used the [custom component published on my
+GitHub repository](https://github.com/exxamalte/home-assistant-customisations/tree/master/nsw-rural-fire-service-fire-danger), 
+please remove this manually including any template sensors you created.
+
+
+## Configuration Details
+
+The following [districts are supported by this integration](http://www.rfs.nsw.gov.au/feeds/fdrToban.xml):
+* Far North Coast
+* North Coast
+* Greater Hunter
+* Greater Sydney Region
+* Illawarra/Shoalhaven
+* Far South Coast
+* Monaro Alpine
+* ACT
+* Southern Ranges
+* Central Ranges
+* New England
+* Northern Slopes
+* North Western
+* Upper Central West Plains
+* Lower Central West Plains
+* Southern Slopes
+* Eastern Riverina
+* Southern Riverina
+* Northern Riverina
+* South Western
+* Far Western
