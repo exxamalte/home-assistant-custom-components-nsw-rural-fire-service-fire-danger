@@ -1,10 +1,14 @@
 """NSW Rural Fire Service - Fire Danger - Binary Sensor."""
 import logging
+from typing import Callable, List
 
 from homeassistant.components.binary_sensor import (
     BinarySensorEntity,
     DEVICE_CLASS_SAFETY,
 )
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.entity import Entity
 
 from .const import DOMAIN, BINARY_SENSOR_TYPES
 from .entity import NswFireServiceFireDangerEntity
@@ -15,7 +19,11 @@ _LOGGER = logging.getLogger(__name__)
 PARALLEL_UPDATES = 0
 
 
-async def async_setup_entry(hass, entry, async_add_entities):
+async def async_setup_entry(
+    hass: HomeAssistant,
+    entry: ConfigEntry,
+    async_add_entities: Callable[[List[Entity], bool], None],
+) -> None:
     """Set up the NSW Rural Fire Service Fire Danger Feed platform."""
     manager = hass.data[DOMAIN][entry.entry_id]
     config_entry_unique_id = entry.unique_id

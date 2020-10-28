@@ -1,12 +1,13 @@
 """NSW Rural Fire Service - Fire Danger - Entity."""
 import logging
-from typing import Optional
+from typing import Optional, Dict, Any
 
 from homeassistant.const import STATE_UNKNOWN, ATTR_ATTRIBUTION
-from homeassistant.core import callback
+from homeassistant.core import callback, HomeAssistant
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity import Entity
 
+from . import NswRfsFireDangerFeedEntityManager
 from .const import DEFAULT_ATTRIBUTION, DEFAULT_FORCE_UPDATE, TYPES
 
 _LOGGER = logging.getLogger(__name__)
@@ -15,7 +16,13 @@ _LOGGER = logging.getLogger(__name__)
 class NswFireServiceFireDangerEntity(Entity):
     """Implementation of a generic entity."""
 
-    def __init__(self, hass, manager, sensor_type, config_entry_unique_id):
+    def __init__(
+        self,
+        hass: HomeAssistant,
+        manager: NswRfsFireDangerFeedEntityManager,
+        sensor_type: str,
+        config_entry_unique_id: str,
+    ):
         """Initialize the entity."""
         self._hass = hass
         self._manager = manager
@@ -30,11 +37,8 @@ class NswFireServiceFireDangerEntity(Entity):
         }
         self._remove_signal_update = None
 
-    async def async_added_to_hass(self):
+    async def async_added_to_hass(self) -> None:
         """Call when entity is added to hass."""
-        _LOGGER.debug(
-            f"Subscribing to: nsw_rfs_fire_danger_update_{self._district_name}"
-        )
         self._remove_signal_update = async_dispatcher_connect(
             self.hass,
             f"nsw_rfs_fire_danger_update_{self._district_name}",
@@ -62,12 +66,12 @@ class NswFireServiceFireDangerEntity(Entity):
             del self._attributes[self._sensor_type]
 
     @property
-    def should_poll(self):
+    def should_poll(self) -> bool:
         """No polling needed."""
         return False
 
     @property
-    def name(self):
+    def name(self) -> Optional[str]:
         """Return the name of the sensor."""
         return self._name
 
@@ -77,11 +81,11 @@ class NswFireServiceFireDangerEntity(Entity):
         return f"{self._config_entry_unique_id}_{self._sensor_type}"
 
     @property
-    def force_update(self):
+    def force_update(self) -> bool:
         """Force update."""
         return DEFAULT_FORCE_UPDATE
 
     @property
-    def device_state_attributes(self):
+    def device_state_attributes(self) -> Optional[Dict[str, Any]]:
         """Return the state attributes."""
         return self._attributes

@@ -3,7 +3,7 @@ import voluptuous as vol
 
 from homeassistant import config_entries
 from homeassistant.const import CONF_SCAN_INTERVAL
-from homeassistant.core import callback
+from homeassistant.core import callback, HomeAssistant
 
 from .const import (
     DEFAULT_SCAN_INTERVAL,
@@ -14,7 +14,7 @@ from .const import (
 
 
 @callback
-def configured_instances(hass):
+def configured_instances(hass: HomeAssistant):
     """Return a set of configured NSW Rural Fire Service Fire Danger instances."""
     return {
         f"{entry.data[CONF_DISTRICT_NAME]}"
