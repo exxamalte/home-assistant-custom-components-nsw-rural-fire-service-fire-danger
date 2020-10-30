@@ -19,6 +19,8 @@ This custom component automatically generates 4 entities:
 Install this component via HACS, then go to "Configuration" -> "Integrations" and search for "NSW Rural Fire Service - Fire Danger".
 You have to select your district from the list and then hit "Submit".
 
+**Please note:** If you have previously used the [custom component published on my GitHub repository](https://github.com/exxamalte/home-assistant-customisations/tree/master/nsw-rural-fire-service-fire-danger), please remove this manually including any template sensors you created.
+
 All entities will be generated automatically and the state will be updated every 15 minutes from the external feed.
 
 
@@ -40,5 +42,3 @@ The following attributes will be available with each entity.
 ## More Information
 
 Please [have a look at my blog](https://neon.ninja/2019/02/fire-danger-rating/) which is showcasing an earlier version of this component.
-
-**Please note:** If you have previously used the [custom component published on my GitHub repository](https://github.com/exxamalte/home-assistant-customisations/tree/master/nsw-rural-fire-service-fire-danger), please remove this manually including any template sensors you created.
