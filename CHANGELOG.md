@@ -1,5 +1,8 @@
 # Changes
 
+## 0.3 (30/10.2020)
+* Shorten name and entity id to avoid database issues.
+
 ## 0.2 (28/10.2020)
 * Supporting configuration from UI.
 * Automatically generates 4 sensors.
