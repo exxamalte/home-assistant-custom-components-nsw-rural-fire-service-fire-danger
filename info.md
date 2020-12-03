@@ -14,6 +14,13 @@ This custom component automatically generates 4 entities:
 * Fire ban today
 * Fire ban tomorrow
 
+{% if installed %}
+## Notes
+{% if version_installed.replace("v", "").replace(".","") | int <= 3  %}
+Please update to v0.4 when upgrading to Home Assistant 0.119 or later.
+{% endif %}
+{% endif %}
+
 ## Installation
 
 Install this component via HACS, then go to "Configuration" -> "Integrations" and search for "NSW Rural Fire Service - Fire Danger".

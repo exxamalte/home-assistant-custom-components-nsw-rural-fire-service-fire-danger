@@ -1,9 +1,13 @@
 # Changes
 
-## 0.3 (30/10.2020)
+## 0.4 (03/12/2020)
+* Fix for signature change in rest data class in Home Assistant 0.119.
+* Code housekeeping (black formatting, isort, flake8).
+
+## 0.3 (30/10/2020)
 * Shorten name and entity id to avoid database issues.
 
-## 0.2 (28/10.2020)
+## 0.2 (28/10/2020)
 * Supporting configuration from UI.
 * Automatically generates 4 sensors.
 * Fixed dependencies.
