@@ -9,8 +9,13 @@ import xmltodict
 from homeassistant.components.rest.data import RestData
 
 from homeassistant.config_entries import SOURCE_IMPORT, ConfigEntry
-from homeassistant.const import CONF_SCAN_INTERVAL, STATE_OK, STATE_UNKNOWN, \
-    MAJOR_VERSION, MINOR_VERSION
+from homeassistant.const import (
+    CONF_SCAN_INTERVAL,
+    STATE_OK,
+    STATE_UNKNOWN,
+    MAJOR_VERSION,
+    MINOR_VERSION,
+)
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.dispatcher import async_dispatcher_send
@@ -111,9 +116,13 @@ class NswRfsFireDangerFeedEntityManager:
         self._scan_interval = timedelta(seconds=config_entry.data[CONF_SCAN_INTERVAL])
         self._track_time_remove_callback = None
         if MAJOR_VERSION == 0 and MINOR_VERSION >= 119:
-            self._rest = RestData(DEFAULT_METHOD, URL, None, None, None, None, DEFAULT_VERIFY_SSL)
+            self._rest = RestData(
+                DEFAULT_METHOD, URL, None, None, None, None, DEFAULT_VERIFY_SSL
+            )
         else:
-            self._rest = RestData(DEFAULT_METHOD, URL, None, None, None, DEFAULT_VERIFY_SSL)
+            self._rest = RestData(
+                DEFAULT_METHOD, URL, None, None, None, DEFAULT_VERIFY_SSL
+            )
         self._attributes = None
 
     @property
