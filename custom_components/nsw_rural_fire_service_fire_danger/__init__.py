@@ -114,7 +114,7 @@ class NswRfsFireDangerFeedEntityManager:
         self._config_entry_id = config_entry.entry_id
         self._scan_interval = timedelta(seconds=config_entry.data[CONF_SCAN_INTERVAL])
         self._track_time_remove_callback = None
-        if MAJOR_VERSION == 0 and MINOR_VERSION >= 119:
+        if MAJOR_VERSION >= 0 or MINOR_VERSION >= 119:
             self._rest = RestData(
                 DEFAULT_METHOD, URL, None, None, None, None, DEFAULT_VERIFY_SSL
             )
