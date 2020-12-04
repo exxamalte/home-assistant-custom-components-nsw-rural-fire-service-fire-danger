@@ -1,5 +1,8 @@
 # Changes
 
+## 0.5 (04/12/2020)
+* Fix for signature change in rest data class now also covers Home Assistant 1.0.0+
+
 ## 0.4 (03/12/2020)
 * Fix for signature change in rest data class in Home Assistant 0.119.
 * Code housekeeping (black formatting, isort, flake8).
