@@ -1,7 +1,10 @@
 # Changes
 
+## 0.6 (02/01/2021)
+* Fix for signature change in rest data class now also covers Home Assistant 2021.1+.
+
 ## 0.5 (04/12/2020)
-* Fix for signature change in rest data class now also covers Home Assistant 1.0.0+
+* Fix for signature change in rest data class now also covers Home Assistant 2020.12+.
 
 ## 0.4 (03/12/2020)
 * Fix for signature change in rest data class in Home Assistant 0.119.
