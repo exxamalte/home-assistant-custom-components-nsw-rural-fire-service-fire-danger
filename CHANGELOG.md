@@ -1,5 +1,8 @@
 # Changes
 
+## 0.7 (06/02/2021)
+* Add version to manifest.
+
 ## 0.6 (02/01/2021)
 * Fix for signature change in rest data class now also covers Home Assistant 2021.1+.
 
