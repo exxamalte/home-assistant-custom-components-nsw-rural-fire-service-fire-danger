@@ -1,5 +1,8 @@
 # Changes
 
+## 0.8 (06/05/2021)
+* Add IoT class to manifest.
+
 ## 0.7 (06/02/2021)
 * Add version to manifest.
 
