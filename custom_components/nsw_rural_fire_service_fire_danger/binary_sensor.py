@@ -3,7 +3,7 @@ import logging
 from typing import Callable, List
 
 from homeassistant.components.binary_sensor import (
-    DEVICE_CLASS_SAFETY,
+    BinarySensorDeviceClass,
     BinarySensorEntity,
 )
 from homeassistant.config_entries import ConfigEntry
@@ -53,4 +53,4 @@ class NswFireServiceFireDangerBinarySensor(
     @property
     def device_class(self):
         """Return the class of this device."""
-        return DEVICE_CLASS_SAFETY
+        return BinarySensorDeviceClass.SAFETY
