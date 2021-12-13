@@ -7,13 +7,7 @@ import voluptuous as vol
 import xmltodict
 from homeassistant.components.rest.data import RestData
 from homeassistant.config_entries import SOURCE_IMPORT, ConfigEntry
-from homeassistant.const import (
-    CONF_SCAN_INTERVAL,
-    MAJOR_VERSION,
-    MINOR_VERSION,
-    STATE_OK,
-    STATE_UNKNOWN,
-)
+from homeassistant.const import CONF_SCAN_INTERVAL, STATE_OK, STATE_UNKNOWN
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.dispatcher import async_dispatcher_send
@@ -114,22 +108,9 @@ class NswRfsFireDangerFeedEntityManager:
         self._config_entry_id = config_entry.entry_id
         self._scan_interval = timedelta(seconds=config_entry.data[CONF_SCAN_INTERVAL])
         self._track_time_remove_callback = None
-        # Distinguish multiple cases:
-        # 1. If version <= 0.118: 6 arguments
-        # 2. If version >= 0.119 and <= 2020.12: 7 arguments (added 'params' as 6th)
-        # 3. If version >= 2021.1: 8 arguments (added 'hass' as 1st)
-        if MAJOR_VERSION >= 2021:
-            self._rest = RestData(
-                hass, DEFAULT_METHOD, URL, None, None, None, None, DEFAULT_VERIFY_SSL
-            )
-        elif MAJOR_VERSION >= 1 or MINOR_VERSION >= 119:
-            self._rest = RestData(
-                DEFAULT_METHOD, URL, None, None, None, None, DEFAULT_VERIFY_SSL
-            )
-        else:
-            self._rest = RestData(
-                DEFAULT_METHOD, URL, None, None, None, DEFAULT_VERIFY_SSL
-            )
+        self._rest = RestData(
+            hass, DEFAULT_METHOD, URL, None, None, None, None, DEFAULT_VERIFY_SSL
+        )
         self._attributes = None
 
     @property
