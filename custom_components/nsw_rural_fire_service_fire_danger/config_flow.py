@@ -1,6 +1,8 @@
 """Config flow to configure the NSW Rural Fire Service Fire Danger integration."""
+from typing import Any
+
 import voluptuous as vol
-from homeassistant import config_entries
+from homeassistant import config_entries, data_entry_flow
 from homeassistant.const import CONF_SCAN_INTERVAL
 from homeassistant.core import HomeAssistant, callback
 
@@ -43,7 +45,9 @@ class NswRuralFireServiceFireDangerFlowHandler(
         """Import a config entry from configuration.yaml."""
         return await self.async_step_user(import_config)
 
-    async def async_step_user(self, user_input=None):
+    async def async_step_user(
+        self, user_input: dict[str, Any] | None = None
+    ) -> data_entry_flow.FlowResult:
         """Handle the start of the config flow."""
         if not user_input:
             return await self._show_form()

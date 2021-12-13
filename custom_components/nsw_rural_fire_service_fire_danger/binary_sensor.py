@@ -46,11 +46,11 @@ class NswFireServiceFireDangerBinarySensor(
     """Implementation of the binary sensor."""
 
     @property
-    def is_on(self):
+    def is_on(self) -> bool | None:
         """Return true if the binary sensor is on."""
         return bool(self._state)
 
     @property
-    def device_class(self):
+    def device_class(self) -> BinarySensorDeviceClass | str | None:
         """Return the class of this device."""
         return BinarySensorDeviceClass.SAFETY

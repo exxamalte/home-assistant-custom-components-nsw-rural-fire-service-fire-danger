@@ -1,10 +1,11 @@
 """NSW Rural Fire Service - Fire Danger - Sensor."""
 import logging
-from typing import Callable, List, Optional
+from typing import Callable, List
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import Entity
+from homeassistant.helpers.typing import StateType
 
 from .const import DOMAIN, SENSOR_TYPES
 from .entity import NswFireServiceFireDangerEntity
@@ -40,11 +41,11 @@ class NswFireServiceFireDangerSensor(NswFireServiceFireDangerEntity):
     """Implementation of the sensor."""
 
     @property
-    def state(self):
+    def state(self) -> StateType:
         """Return the state of the device."""
         return self._state
 
     @property
-    def icon(self) -> Optional[str]:
+    def icon(self) -> str | None:
         """Return the icon to use in the frontend, if any."""
         return "mdi:speedometer-medium"
