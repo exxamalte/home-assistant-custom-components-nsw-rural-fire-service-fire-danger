@@ -1,6 +1,6 @@
 """NSW Rural Fire Service - Fire Danger - Entity."""
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Mapping
 
 from homeassistant.const import ATTR_ATTRIBUTION, STATE_UNKNOWN
 from homeassistant.core import HomeAssistant, callback
@@ -71,12 +71,12 @@ class NswFireServiceFireDangerEntity(Entity):
         return False
 
     @property
-    def name(self) -> Optional[str]:
+    def name(self) -> str | None:
         """Return the name of the sensor."""
         return self._name
 
     @property
-    def unique_id(self) -> Optional[str]:
+    def unique_id(self) -> str | None:
         """Return a unique ID containing latitude/longitude and external id."""
         return f"{self._config_entry_unique_id}_{self._sensor_type}"
 
@@ -86,6 +86,6 @@ class NswFireServiceFireDangerEntity(Entity):
         return DEFAULT_FORCE_UPDATE
 
     @property
-    def device_state_attributes(self) -> Optional[Dict[str, Any]]:
-        """Return the state attributes."""
+    def extra_state_attributes(self) -> Mapping[str, Any] | None:
+        """Return the entity specific state attributes."""
         return self._attributes
