@@ -1,21 +1,22 @@
 """NSW Rural Fire Service - Fire Danger - Consts."""
 from datetime import timedelta
+from typing import Final
 
 from homeassistant.const import Platform
 
-CONF_DISTRICT_NAME = "district_name"
+CONF_DISTRICT_NAME: Final = "district_name"
 
-DEFAULT_ATTRIBUTION = "NSW Rural Fire Service"
+DEFAULT_ATTRIBUTION: Final = "NSW Rural Fire Service"
 
-DEFAULT_FORCE_UPDATE = True
-DEFAULT_METHOD = "GET"
-DEFAULT_NAME = "Fire Danger"
-DEFAULT_SCAN_INTERVAL = timedelta(minutes=15)
-DEFAULT_VERIFY_SSL = True
+DEFAULT_FORCE_UPDATE: Final = True
+DEFAULT_METHOD: Final = "GET"
+DEFAULT_NAME: Final = "Fire Danger"
+DEFAULT_SCAN_INTERVAL: Final = timedelta(minutes=15)
+DEFAULT_VERIFY_SSL: Final = True
 
-DOMAIN = "nsw_rural_fire_service_fire_danger"
+DOMAIN: Final = "nsw_rural_fire_service_fire_danger"
 
-SENSOR_ATTRIBUTES = {
+SENSOR_ATTRIBUTES: Final = {
     # <XML Key>: [<Display Name>, <Conversion Function>]
     "RegionNumber": ["region_number", lambda x: int(x)],
     "Councils": ["councils", lambda x: x.split(";")],
@@ -25,21 +26,21 @@ SENSOR_ATTRIBUTES = {
     "FireBanTomorrow": ["fire_ban_tomorrow", lambda x: x == "Yes"],
 }
 
-BINARY_SENSOR_TYPES = ["fire_ban_today", "fire_ban_tomorrow"]
-SENSOR_TYPES = ["danger_level_today", "danger_level_tomorrow"]
-TYPES = {
+BINARY_SENSOR_TYPES: Final = ["fire_ban_today", "fire_ban_tomorrow"]
+SENSOR_TYPES: Final = ["danger_level_today", "danger_level_tomorrow"]
+TYPES: Final = {
     "danger_level_today": "Danger Level Today",
     "danger_level_tomorrow": "Danger Level Tomorrow",
     "fire_ban_today": "Fire Ban Today",
     "fire_ban_tomorrow": "Fire Ban Tomorrow",
 }
 
-PLATFORMS = [Platform.BINARY_SENSOR, Platform.SENSOR]
+PLATFORMS: Final = [Platform.BINARY_SENSOR, Platform.SENSOR]
 
-URL_DATA = "http://www.rfs.nsw.gov.au/feeds/fdrToban.xml"
-URL_SERVICE = "http://www.rfs.nsw.gov.au/"
+URL_DATA: Final = "http://www.rfs.nsw.gov.au/feeds/fdrToban.xml"
+URL_SERVICE: Final = "http://www.rfs.nsw.gov.au/"
 
-VALID_DISTRICT_NAMES = [
+VALID_DISTRICT_NAMES: Final = [
     "Far North Coast",
     "North Coast",
     "Greater Hunter",
@@ -63,6 +64,6 @@ VALID_DISTRICT_NAMES = [
     "Far Western",
 ]
 
-XML_DISTRICT = "District"
-XML_FIRE_DANGER_MAP = "FireDangerMap"
-XML_NAME = "Name"
+XML_DISTRICT: Final = "District"
+XML_FIRE_DANGER_MAP: Final = "FireDangerMap"
+XML_NAME: Final = "Name"
