@@ -1,4 +1,6 @@
 """Config flow to configure the NSW Rural Fire Service Fire Danger integration."""
+from __future__ import annotations
+
 from typing import Any
 
 import voluptuous as vol
@@ -29,7 +31,6 @@ class NswRuralFireServiceFireDangerFlowHandler(
     """Handle a NSW Rural Fire Service Fire Danger config flow."""
 
     VERSION = 1
-    CONNECTION_CLASS = config_entries.CONN_CLASS_CLOUD_POLL
 
     async def _show_form(self, errors=None):
         """Show the form to the user."""

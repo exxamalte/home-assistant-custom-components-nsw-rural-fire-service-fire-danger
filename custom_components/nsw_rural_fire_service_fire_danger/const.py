@@ -1,6 +1,8 @@
 """NSW Rural Fire Service - Fire Danger - Consts."""
 from datetime import timedelta
 
+from homeassistant.const import Platform
+
 CONF_DISTRICT_NAME = "district_name"
 
 DEFAULT_ATTRIBUTION = "NSW Rural Fire Service"
@@ -32,9 +34,10 @@ TYPES = {
     "fire_ban_tomorrow": "Fire Ban Tomorrow",
 }
 
-COMPONENTS = ["binary_sensor", "sensor"]
+PLATFORMS = [Platform.BINARY_SENSOR, Platform.SENSOR]
 
-URL = "http://www.rfs.nsw.gov.au/feeds/fdrToban.xml"
+URL_DATA = "http://www.rfs.nsw.gov.au/feeds/fdrToban.xml"
+URL_SERVICE = "http://www.rfs.nsw.gov.au/"
 
 VALID_DISTRICT_NAMES = [
     "Far North Coast",
