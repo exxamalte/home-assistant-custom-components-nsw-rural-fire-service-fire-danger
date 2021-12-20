@@ -4,9 +4,10 @@ from __future__ import annotations
 from typing import Any
 
 import voluptuous as vol
-from homeassistant import config_entries, data_entry_flow
+from homeassistant import config_entries
 from homeassistant.const import CONF_SCAN_INTERVAL
 from homeassistant.core import HomeAssistant, callback
+from homeassistant.data_entry_flow import FlowResult
 
 from .const import (
     CONF_DISTRICT_NAME,
@@ -32,7 +33,7 @@ class NswRuralFireServiceFireDangerFlowHandler(
 
     VERSION = 1
 
-    async def _show_form(self, errors=None):
+    async def _show_form(self, errors: dict[str, Any] | None = None) -> FlowResult:
         """Show the form to the user."""
         data_schema = vol.Schema(
             {vol.Required(CONF_DISTRICT_NAME): vol.In(VALID_DISTRICT_NAMES)}
@@ -42,13 +43,13 @@ class NswRuralFireServiceFireDangerFlowHandler(
             step_id="user", data_schema=data_schema, errors=errors or {}
         )
 
-    async def async_step_import(self, import_config):
+    async def async_step_import(self, user_input: dict[str, Any]) -> FlowResult:
         """Import a config entry from configuration.yaml."""
-        return await self.async_step_user(import_config)
+        return await self.async_step_user(user_input)
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
-    ) -> data_entry_flow.FlowResult:
+    ) -> FlowResult:
         """Handle the start of the config flow."""
         if not user_input:
             return await self._show_form()

@@ -34,7 +34,7 @@ class NswFireServiceFireDangerEntity(CoordinatorEntity):
         coordinator: NswRfsFireDangerFeedCoordinator,
         sensor_type: str,
         config_entry_unique_id: str,
-    ):
+    ) -> None:
         """Initialize the entity."""
         super().__init__(coordinator)
         self._district_name = coordinator.district_name

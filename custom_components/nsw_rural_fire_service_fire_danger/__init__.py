@@ -67,19 +67,17 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     return True
 
 
-async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry):
+async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up the NSW Rural Fire Service Fire Danger component as config entry."""
     hass.data.setdefault(DOMAIN, {})
     # Create feed coordinator for all platforms.
-    coordinator = NswRfsFireDangerFeedCoordinator(hass, config_entry)
-    hass.data[DOMAIN][config_entry.entry_id] = coordinator
-    _LOGGER.debug("Feed coordinator added for %s", config_entry.entry_id)
+    coordinator = NswRfsFireDangerFeedCoordinator(hass, entry)
+    hass.data[DOMAIN][entry.entry_id] = coordinator
+    _LOGGER.debug("Feed coordinator added for %s", entry.entry_id)
 
     async def _enable_scheduled_updates(*_):
         """Activate the data update coordinator."""
-        scan_interval = config_entry.options.get(
-            CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL
-        )
+        scan_interval = entry.options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
         if isinstance(scan_interval, int):
             coordinator.update_interval = timedelta(minutes=scan_interval)
         else:
@@ -94,18 +92,16 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry):
             EVENT_HOMEASSISTANT_STARTED, _enable_scheduled_updates
         )
 
-    hass.config_entries.async_setup_platforms(config_entry, PLATFORMS)
+    hass.config_entries.async_setup_platforms(entry, PLATFORMS)
 
     return True
 
 
-async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry):
+async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload an NSW Rural Fire Service Fire Danger component config entry."""
-    unload_ok = await hass.config_entries.async_unload_platforms(
-        config_entry, PLATFORMS
-    )
+    unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
     if unload_ok:
-        hass.data[DOMAIN].pop(config_entry.entry_id)
+        hass.data[DOMAIN].pop(entry.entry_id)
     return unload_ok
 
 
