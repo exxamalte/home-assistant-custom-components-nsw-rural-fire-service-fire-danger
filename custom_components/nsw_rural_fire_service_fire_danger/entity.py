@@ -47,7 +47,6 @@ class NswFireServiceFireDangerEntity(CoordinatorEntity):
             "district": self._district_name,
             ATTR_ATTRIBUTION: DEFAULT_ATTRIBUTION,
         }
-        # self._remove_signal_update = None
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, self.coordinator.config_entry.entry_id)},
             name=DEFAULT_NAME,
