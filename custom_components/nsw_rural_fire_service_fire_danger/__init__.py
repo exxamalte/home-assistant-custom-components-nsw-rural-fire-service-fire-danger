@@ -132,7 +132,7 @@ class NswRfsFireDangerFeedCoordinator(DataUpdateCoordinator):
 
     @property
     def district_name(self) -> str:
-        """Return the district name of the manager."""
+        """Return the district name of the coordinator."""
         return self._district_name
 
     @staticmethod

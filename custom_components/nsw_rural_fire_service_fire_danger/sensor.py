@@ -18,12 +18,14 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up the NSW Rural Fire Service Fire Danger Feed platform."""
-    manager = hass.data[DOMAIN][config_entry.entry_id]
+    coordinator = hass.data[DOMAIN][config_entry.entry_id]
     config_entry_unique_id = config_entry.unique_id
 
     async_add_entities(
         [
-            NswFireServiceFireDangerSensor(manager, sensor_type, config_entry_unique_id)
+            NswFireServiceFireDangerSensor(
+                coordinator, sensor_type, config_entry_unique_id
+            )
             for sensor_type in SENSOR_TYPES
         ],
         True,
