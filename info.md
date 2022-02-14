@@ -18,7 +18,8 @@ This custom component automatically generates 4 entities:
 ## Notes
 {% if version_installed.replace("v", "").replace(".","") | int <= 5  %}
 Please update to v0.5 when upgrading to Home Assistant 2020.12.
-Please update to v0.6 when upgrading to Home Assistant 2021.1 or later
+Please update to v0.6 when upgrading to Home Assistant 2021.1 or later.
+Please update to v0.9 when upgrading to Home Assistant 2021.12 or later.
 {% endif %}
 {% endif %}
 

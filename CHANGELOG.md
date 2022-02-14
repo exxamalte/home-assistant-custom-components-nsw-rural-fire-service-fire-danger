@@ -1,5 +1,11 @@
 # Changes
 
+## 0.9 (15/02/2022)
+* Now requires at least Home Assistant 2021.12.0.
+* Replaced deprecated methods and constants.
+* Migrated to `DataUpdateCoordinator` to reduce code complexity and improve performance.
+* Code housekeeping.
+
 ## 0.8 (06/05/2021)
 * Add IoT class to manifest.
 
