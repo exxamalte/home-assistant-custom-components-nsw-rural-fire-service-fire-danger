@@ -6,8 +6,8 @@ import voluptuous as vol
 import xmltodict
 from homeassistant.components.rest.data import RestData
 from homeassistant.config_entries import SOURCE_IMPORT, ConfigEntry
-from homeassistant.const import CONF_SCAN_INTERVAL, EVENT_HOMEASSISTANT_STARTED
-from homeassistant.core import CoreState, HomeAssistant
+from homeassistant.const import CONF_SCAN_INTERVAL
+from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.typing import ConfigType
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
@@ -74,35 +74,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     coordinator = NswRfsFireDangerFeedCoordinator(hass, entry)
     hass.data[DOMAIN][entry.entry_id] = coordinator
     _LOGGER.debug("Feed coordinator added for %s", entry.entry_id)
-
-    async def _enable_scheduled_updates(*_):
-        """Activate the data update coordinator."""
-        scan_interval = entry.options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
-        if isinstance(scan_interval, int):
-            coordinator.update_interval = timedelta(minutes=scan_interval)
-        else:
-            coordinator.update_interval = scan_interval
-        await coordinator.async_refresh()
-
-    if hass.state == CoreState.running:
-        await _enable_scheduled_updates()
-    else:
-        # Run updates only after server is started.
-        hass.bus.async_listen_once(
-            EVENT_HOMEASSISTANT_STARTED, _enable_scheduled_updates
-        )
-
     hass.config_entries.async_setup_platforms(entry, PLATFORMS)
-
     return True
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload an NSW Rural Fire Service Fire Danger component config entry."""
-    unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
-    if unload_ok:
-        hass.data[DOMAIN].pop(entry.entry_id)
-    return unload_ok
+    coordinator = hass.data[DOMAIN].pop(entry.entry_id)
+    await coordinator.async_stop()
+    return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
 
 
 class NswRfsFireDangerFeedCoordinator(DataUpdateCoordinator):
@@ -118,12 +98,12 @@ class NswRfsFireDangerFeedCoordinator(DataUpdateCoordinator):
         self._rest = RestData(
             hass, DEFAULT_METHOD, URL_DATA, None, None, None, None, DEFAULT_VERIFY_SSL
         )
-        # self._attributes = None
         super().__init__(
             self.hass,
             _LOGGER,
             name=DOMAIN,
             update_method=self.async_update,
+            update_interval=timedelta(seconds=config_entry.data[CONF_SCAN_INTERVAL]),
         )
 
     @property
