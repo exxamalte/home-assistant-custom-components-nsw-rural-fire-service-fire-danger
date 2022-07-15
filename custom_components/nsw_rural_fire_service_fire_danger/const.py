@@ -10,7 +10,7 @@ DEFAULT_ATTRIBUTION: Final = "NSW Rural Fire Service"
 
 DEFAULT_FORCE_UPDATE: Final = True
 DEFAULT_METHOD: Final = "GET"
-DEFAULT_NAME: Final = "Fire Danger"
+DEFAULT_NAME_PREFIX: Final = "Fire Danger"
 DEFAULT_SCAN_INTERVAL: Final = timedelta(minutes=15)
 DEFAULT_VERIFY_SSL: Final = True
 

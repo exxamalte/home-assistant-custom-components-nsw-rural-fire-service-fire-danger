@@ -15,7 +15,7 @@ from . import NswRfsFireDangerFeedCoordinator
 from .const import (
     DEFAULT_ATTRIBUTION,
     DEFAULT_FORCE_UPDATE,
-    DEFAULT_NAME,
+    DEFAULT_NAME_PREFIX,
     DOMAIN,
     TYPES,
     URL_SERVICE,
@@ -47,7 +47,7 @@ class NswFireServiceFireDangerEntity(CoordinatorEntity[dict[str, Any]]):
         }
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, self.coordinator.config_entry.entry_id)},
-            name=f"{DEFAULT_NAME} {coordinator.district_name}",
+            name=f"{DEFAULT_NAME_PREFIX} {coordinator.district_name}",
             entry_type=DeviceEntryType.SERVICE,
             configuration_url=URL_SERVICE,
         )
