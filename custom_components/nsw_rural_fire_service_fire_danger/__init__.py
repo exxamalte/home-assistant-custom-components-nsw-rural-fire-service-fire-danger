@@ -1,6 +1,7 @@
 # NSW Rural Fire Service Fire Danger.
 import logging
 from datetime import timedelta
+from typing import Any
 
 import voluptuous as vol
 import xmltodict
@@ -72,6 +73,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.setdefault(DOMAIN, {})
     # Create feed coordinator for all platforms.
     coordinator = NswRfsFireDangerFeedCoordinator(hass, entry)
+    await coordinator.async_config_entry_first_refresh()
     hass.data[DOMAIN][entry.entry_id] = coordinator
     _LOGGER.debug("Feed coordinator added for %s", entry.entry_id)
     hass.config_entries.async_setup_platforms(entry, PLATFORMS)
@@ -85,7 +87,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
 
 
-class NswRfsFireDangerFeedCoordinator(DataUpdateCoordinator):
+class NswRfsFireDangerFeedCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     """Feed Entity Manager for NSW Rural Fire Service Fire Danger feed."""
 
     def __init__(self, hass: HomeAssistant, config_entry: ConfigEntry) -> None:
