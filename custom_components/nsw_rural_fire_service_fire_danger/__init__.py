@@ -92,10 +92,7 @@ class NswRfsFireDangerFeedCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     def __init__(self, hass: HomeAssistant, config_entry: ConfigEntry) -> None:
         """Initialize the Feed Entity Manager."""
         self.hass = hass
-        self.config_entry: ConfigEntry = config_entry
         self._district_name = config_entry.data[CONF_DISTRICT_NAME]
-        self._config_entry_id = config_entry.entry_id
-        self._scan_interval = timedelta(seconds=config_entry.data[CONF_SCAN_INTERVAL])
         self._rest = RestData(
             hass, DEFAULT_METHOD, URL_DATA, None, None, None, None, DEFAULT_VERIFY_SSL
         )
