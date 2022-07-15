@@ -38,13 +38,11 @@ class NswFireServiceFireDangerEntity(CoordinatorEntity[dict[str, Any]]):
     ) -> None:
         """Initialize the entity."""
         super().__init__(coordinator)
-        self._district_name = coordinator.district_name
         self._sensor_type = sensor_type
-        self._config_entry_unique_id = config_entry_unique_id
-        self._attr_name = f"{self._district_name} {TYPES[self._sensor_type]}"
-        self._attr_unique_id = f"{self._config_entry_unique_id}_{self._sensor_type}"
+        self._attr_name = f"{coordinator.district_name} {TYPES[self._sensor_type]}"
+        self._attr_unique_id = f"{config_entry_unique_id}_{self._sensor_type}"
         self._attr_extra_state_attributes = {
-            "district": self._district_name,
+            "district": coordinator.district_name,
         }
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, self.coordinator.config_entry.entry_id)},
