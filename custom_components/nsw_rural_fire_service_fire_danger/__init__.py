@@ -73,7 +73,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.setdefault(DOMAIN, {})
     # Create feed coordinator for all platforms.
     coordinator = NswRfsFireDangerFeedCoordinator(hass, entry)
-    await coordinator.async_config_entry_first_refresh()
     hass.data[DOMAIN][entry.entry_id] = coordinator
     _LOGGER.debug("Feed coordinator added for %s", entry.entry_id)
     hass.config_entries.async_setup_platforms(entry, PLATFORMS)
