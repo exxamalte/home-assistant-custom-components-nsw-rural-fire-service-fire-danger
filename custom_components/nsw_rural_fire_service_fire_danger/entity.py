@@ -2,9 +2,11 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, Mapping
+from abc import abstractmethod
+from typing import Any
 
 from homeassistant.const import ATTR_ATTRIBUTION
+from homeassistant.core import callback
 from homeassistant.helpers.device_registry import DeviceEntryType
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.typing import StateType
@@ -23,10 +25,9 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 
-class NswFireServiceFireDangerEntity(CoordinatorEntity):
+class NswFireServiceFireDangerEntity(CoordinatorEntity[dict[str, Any]]):
     """Implementation of a generic entity."""
 
-    coordinator: NswRfsFireDangerFeedCoordinator
     _attr_force_update = DEFAULT_FORCE_UPDATE
 
     def __init__(
@@ -42,8 +43,7 @@ class NswFireServiceFireDangerEntity(CoordinatorEntity):
         self._config_entry_unique_id = config_entry_unique_id
         self._attr_name = f"{self._district_name} {TYPES[self._sensor_type]}"
         self._attr_unique_id = f"{self._config_entry_unique_id}_{self._sensor_type}"
-        self._state: StateType = None
-        self._attributes = {
+        self._attr_extra_state_attributes = {
             "district": self._district_name,
             ATTR_ATTRIBUTION: DEFAULT_ATTRIBUTION,
         }
@@ -54,22 +54,23 @@ class NswFireServiceFireDangerEntity(CoordinatorEntity):
             configuration_url=URL_SERVICE,
         )
 
-    @property
-    def native_value(self) -> StateType:
-        """Return native value for entity."""
-        if self.coordinator.data:
-            _LOGGER.debug(f"Updating state from {self.coordinator.data}")
-            self._state = self.coordinator.data[self._sensor_type]
-        return self._state
+    async def async_added_to_hass(self) -> None:
+        """Handle entity which will be added."""
+        await super().async_added_to_hass()
+        # Conduct the initial update.
+        await self.async_update()
 
-    @property
-    def extra_state_attributes(self) -> Mapping[str, Any] | None:
-        """Return the entity specific state attributes."""
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
         if self.coordinator.data:
-            _LOGGER.debug(f"Updating attributes from {self.coordinator.data}")
-            self._state = self.coordinator.data[self._sensor_type]
-            self._attributes.update(self.coordinator.data)
+            _LOGGER.debug(f"Updating state and attributes from {self.coordinator.data}")
+            self._update_state(self.coordinator.data[self._sensor_type])
+            self._attr_extra_state_attributes.update(self.coordinator.data)
             # Remove the attribute equal to sensor's state.
-            del self._attributes[self._sensor_type]
+            del self._attr_extra_state_attributes[self._sensor_type]
+        self.async_write_ha_state()
 
-        return self._attributes
+    @abstractmethod
+    def _update_state(self, new_state: StateType) -> None:
+        """Update the state from the provided value."""
