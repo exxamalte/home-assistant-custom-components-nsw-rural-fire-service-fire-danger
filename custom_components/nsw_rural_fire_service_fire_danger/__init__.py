@@ -81,9 +81,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload an NSW Rural Fire Service Fire Danger component config entry."""
-    coordinator = hass.data[DOMAIN].pop(entry.entry_id)
-    await coordinator.async_stop()
-    return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+    unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+    if unload_ok:
+        hass.data[DOMAIN].pop(entry.entry_id)
+    return unload_ok
 
 
 class NswRfsFireDangerFeedCoordinator(DataUpdateCoordinator[dict[str, Any]]):
