@@ -5,7 +5,6 @@ import logging
 from abc import abstractmethod
 from typing import Any
 
-from homeassistant.const import ATTR_ATTRIBUTION
 from homeassistant.core import callback
 from homeassistant.helpers.device_registry import DeviceEntryType
 from homeassistant.helpers.entity import DeviceInfo
@@ -28,6 +27,7 @@ _LOGGER = logging.getLogger(__name__)
 class NswFireServiceFireDangerEntity(CoordinatorEntity[dict[str, Any]]):
     """Implementation of a generic entity."""
 
+    _attr_attribution = DEFAULT_ATTRIBUTION
     _attr_force_update = DEFAULT_FORCE_UPDATE
 
     def __init__(
@@ -45,7 +45,6 @@ class NswFireServiceFireDangerEntity(CoordinatorEntity[dict[str, Any]]):
         self._attr_unique_id = f"{self._config_entry_unique_id}_{self._sensor_type}"
         self._attr_extra_state_attributes = {
             "district": self._district_name,
-            ATTR_ATTRIBUTION: DEFAULT_ATTRIBUTION,
         }
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, self.coordinator.config_entry.entry_id)},
