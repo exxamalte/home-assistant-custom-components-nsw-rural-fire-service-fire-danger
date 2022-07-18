@@ -20,6 +20,7 @@ This custom component automatically generates 4 entities:
 Please update to v0.5 when upgrading to Home Assistant 2020.12.
 Please update to v0.6 when upgrading to Home Assistant 2021.1 or later.
 Please update to v0.9 when upgrading to Home Assistant 2021.12 or later.
+Please update to v0.10 when upgrading to Home Assistant 2022.07 or later.
 {% endif %}
 {% endif %}
 
