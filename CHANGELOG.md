@@ -1,5 +1,12 @@
 # Changes
 
+## 0.10 (19/07/2022)
+* **Breaking change:** Migrated to new standardised entity naming schema which likely change the names of your entities.
+* Now requires at least Home Assistant 2022.7.0.
+* Fixed an issue causing an error when removing this integration.
+* Bump library version dependencies.
+* Code improvements based on recent Home Assistant core changes.
+
 ## 0.9 (15/02/2022)
 * Now requires at least Home Assistant 2021.12.0.
 * Replaced deprecated methods and constants.
