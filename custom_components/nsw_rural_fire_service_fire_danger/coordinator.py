@@ -9,6 +9,7 @@ from homeassistant.components.rest import RestData
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_SCAN_INTERVAL
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.json import json_loads
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from pyexpat import ExpatError
 
@@ -17,11 +18,14 @@ from .const import (
     DEFAULT_METHOD,
     DEFAULT_VERIFY_SSL,
     DOMAIN,
-    SENSOR_ATTRIBUTES,
+    JSON_AREA_NAME,
+    JSON_FIRE_WEATHER_AREA_RATINGS,
+    JSON_SENSOR_ATTRIBUTES,
     URL_DATA,
     XML_DISTRICT,
     XML_FIRE_DANGER_MAP,
     XML_NAME,
+    XML_SENSOR_ATTRIBUTES,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -62,8 +66,15 @@ class NswRfsFireDangerFeedCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         return self._district_name
 
     @abstractmethod
+    async def _parse_data(self, value) -> dict[str, str]:
+        """Get the latest data from external feed and update the state."""
+
     async def async_update(self) -> dict[str, str]:
         """Get the latest data from external feed and update the state."""
+        _LOGGER.debug("Start updating feed")
+        await self._rest.async_update()
+        value = self._rest.data
+        return await self._parse_data(value)
 
 
 class NswRfsFireDangerStandardFeedCoordinator(NswRfsFireDangerFeedCoordinator):
@@ -90,11 +101,8 @@ class NswRfsFireDangerStandardFeedCoordinator(NswRfsFireDangerFeedCoordinator):
                 else obj[key]
             )
 
-    async def async_update(self) -> dict[str, str]:
-        """Get the latest data from REST API and update the state."""
-        _LOGGER.debug("Start updating feed")
-        await self._rest.async_update()
-        value = self._rest.data
+    async def _parse_data(self, value) -> dict[str, str]:
+        """Parse data and extract relevant information."""
         attributes = {}
         if value:
             try:
@@ -108,14 +116,14 @@ class NswRfsFireDangerStandardFeedCoordinator(NswRfsFireDangerFeedCoordinator):
                             district_name = district.get(XML_NAME)
                             if district_name == self._district_name:
                                 # Found it.
-                                for key in SENSOR_ATTRIBUTES:
+                                for key in XML_SENSOR_ATTRIBUTES:
                                     if key in district:
                                         text_value = district.get(key)
-                                        conversion = SENSOR_ATTRIBUTES[key][1]
+                                        conversion = XML_SENSOR_ATTRIBUTES[key][1]
                                         if conversion:
                                             text_value = conversion(text_value)
                                         attributes[
-                                            SENSOR_ATTRIBUTES[key][0]
+                                            XML_SENSOR_ATTRIBUTES[key][0]
                                         ] = text_value
                                 break
             except ExpatError as ex:
@@ -130,5 +138,35 @@ class NswRfsFireDangerExtendedFeedCoordinator(NswRfsFireDangerFeedCoordinator):
         """Return the data feed type that this coordinator supports."""
         return "extended"
 
-    async def async_update(self) -> dict[str, str]:
-        pass
+    async def _parse_data(self, value) -> dict[str, str]:
+        """Parse data and extract relevant information."""
+        attributes = {}
+        try:
+            if value:
+                json_dict = json_loads(value)
+                if JSON_FIRE_WEATHER_AREA_RATINGS in json_dict:
+                    _LOGGER.debug("Parsing: %s", json_dict)
+                    districts = json_dict[JSON_FIRE_WEATHER_AREA_RATINGS]
+                    if districts and isinstance(districts, list):
+                        for district in districts:
+                            if JSON_AREA_NAME in district:
+                                district_name = district.get(JSON_AREA_NAME)
+                                # Workaround for ACT to make it work with the XML based district names.
+                                if district_name == "The Australian Capital Territory":
+                                    district_name = "ACT"
+                                if district_name == self._district_name:
+                                    # Found it.
+                                    for key in JSON_SENSOR_ATTRIBUTES:
+                                        if key in district:
+                                            text_value = district.get(key)
+                                            conversion = JSON_SENSOR_ATTRIBUTES[key][1]
+                                            if conversion:
+                                                text_value = conversion(text_value)
+                                            attributes[
+                                                JSON_SENSOR_ATTRIBUTES[key][0]
+                                            ] = text_value
+                                    break
+        except ValueError:
+            _LOGGER.warning("REST result could not be parsed as JSON")
+            _LOGGER.debug("Erroneous JSON: %s", value)
+        return attributes

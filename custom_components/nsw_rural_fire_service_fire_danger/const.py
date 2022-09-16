@@ -19,7 +19,10 @@ DEFAULT_VERIFY_SSL: Final = True
 
 DOMAIN: Final = "nsw_rural_fire_service_fire_danger"
 
-SENSOR_ATTRIBUTES: Final = {
+XML_DISTRICT: Final = "District"
+XML_FIRE_DANGER_MAP: Final = "FireDangerMap"
+XML_NAME: Final = "Name"
+XML_SENSOR_ATTRIBUTES: Final = {
     # <XML Key>: [<Display Name>, <Conversion Function>]
     "RegionNumber": ["region_number", lambda x: int(x)],
     "Councils": ["councils", lambda x: x.split(";")],
@@ -27,6 +30,22 @@ SENSOR_ATTRIBUTES: Final = {
     "DangerLevelTomorrow": ["danger_level_tomorrow", lambda x: x.lower().capitalize()],
     "FireBanToday": ["fire_ban_today", lambda x: x == "Yes"],
     "FireBanTomorrow": ["fire_ban_tomorrow", lambda x: x == "Yes"],
+}
+
+JSON_AREA_NAME = "areaName"
+JSON_FIRE_WEATHER_AREA_RATINGS = "fireWeatherAreaRatings"
+JSON_SENSOR_ATTRIBUTES: Final = {
+    # <JSON Key>: [<Display Name>, <Conversion Function>]
+    "areaId": ["region_number", lambda x: int(x)],
+    "areaCouncils": ["councils", lambda x: x.split(";")],
+    "ratingToday": ["danger_level_today", lambda x: x.lower().capitalize()],
+    "ratingTomorrow": ["danger_level_tomorrow", lambda x: x.lower().capitalize()],
+    "ratingDay3": ["danger_level_day3", lambda x: x.lower().capitalize()],
+    "ratingDay4": ["danger_level_day4", lambda x: x.lower().capitalize()],
+    "tobanToday": ["fire_ban_today", lambda x: x == "Yes"],
+    "tobanTomorrow": ["fire_ban_tomorrow", lambda x: x == "Yes"],
+    "tobanDay3": ["fire_ban_day3", lambda x: x == "Yes"],
+    "tobanDay4": ["fire_ban_day4", lambda x: x == "Yes"],
 }
 
 BINARY_SENSOR_TYPES_STANDARD: Final = ["fire_ban_today", "fire_ban_tomorrow"]
@@ -96,7 +115,3 @@ VALID_DISTRICT_NAMES: Final = [
     "South Western",
     "Far Western",
 ]
-
-XML_DISTRICT: Final = "District"
-XML_FIRE_DANGER_MAP: Final = "FireDangerMap"
-XML_NAME: Final = "Name"
