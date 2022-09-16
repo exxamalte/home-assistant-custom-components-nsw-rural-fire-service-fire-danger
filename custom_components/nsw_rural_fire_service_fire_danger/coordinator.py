@@ -106,6 +106,7 @@ class NswRfsFireDangerStandardFeedCoordinator(NswRfsFireDangerFeedCoordinator):
         attributes = {}
         if value:
             try:
+                # Turn XML payload into dict.
                 value = xmltodict.parse(value)
                 districts = self._attribute_in_structure(
                     value, [XML_FIRE_DANGER_MAP, XML_DISTRICT]
@@ -141,8 +142,9 @@ class NswRfsFireDangerExtendedFeedCoordinator(NswRfsFireDangerFeedCoordinator):
     async def _parse_data(self, value) -> dict[str, str]:
         """Parse data and extract relevant information."""
         attributes = {}
-        try:
-            if value:
+        if value:
+            try:
+                # Turn JSON payload into dict.
                 json_dict = json_loads(value)
                 if JSON_FIRE_WEATHER_AREA_RATINGS in json_dict:
                     _LOGGER.debug("Parsing: %s", json_dict)
@@ -166,7 +168,7 @@ class NswRfsFireDangerExtendedFeedCoordinator(NswRfsFireDangerFeedCoordinator):
                                                 JSON_SENSOR_ATTRIBUTES[key][0]
                                             ] = text_value
                                     break
-        except ValueError:
-            _LOGGER.warning("REST result could not be parsed as JSON")
-            _LOGGER.debug("Erroneous JSON: %s", value)
+            except ValueError:
+                _LOGGER.warning("REST result could not be parsed as JSON")
+                _LOGGER.debug("Erroneous JSON: %s", value)
         return attributes
