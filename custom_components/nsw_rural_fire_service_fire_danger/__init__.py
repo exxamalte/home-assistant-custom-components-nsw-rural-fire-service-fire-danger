@@ -85,7 +85,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         raise NotImplementedError(f"Unsupported data feed type {data_feed} selected.")
     hass.data[DOMAIN][entry.entry_id] = data_feed_coordinator
     _LOGGER.debug("Feed coordinator added for %s", entry.entry_id)
-    hass.config_entries.async_setup_platforms(entry, PLATFORMS)
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True
 
 
