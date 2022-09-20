@@ -1,2 +1,2 @@
 homeassistant>=2022.8.0
-xmltodict>=0.11.0
+xmltodict>=0.13.0
