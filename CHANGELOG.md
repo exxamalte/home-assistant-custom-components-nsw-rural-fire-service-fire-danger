@@ -1,7 +1,12 @@
 # Changes
 
+## 0.11 (20/09/2022)
+* Added support for an extended feed that provides a forecast for 4 days.
+* Replaced deprecated method.
+* Now requires at least Home Assistant 2022.8.0.
+
 ## 0.10 (19/07/2022)
-* **Breaking change:** Migrated to new standardised entity naming schema which likely change the names of your entities.
+* **Breaking change:** Migrated to new standardised entity naming schema which likely changes the names of your entities.
 * Now requires at least Home Assistant 2022.7.0.
 * Fixed an issue causing an error when removing this integration.
 * Bump library version dependencies.
