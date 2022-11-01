@@ -48,6 +48,10 @@ There are currently two different feeds supported:
 
 There is currently no option to switch between the two feeds, so please delete and recreate the configuration if you want to switch feeds.
 
+The actual feed contains the value "NONE" in case no rating has been issued. This is converted into `None` which has a special meaning in Python and hence in Home Assistant, 
+and which subsequently may cause confusion when used in automations. There is an option available when setting up this integration to automatically convert this into "No Rating" 
+which is the term used on the RFS website.
+
 **Please note:** If you have previously used the [custom component published on my GitHub repository](https://github.com/exxamalte/home-assistant-customisations/tree/master/nsw-rural-fire-service-fire-danger), please remove this manually including any template sensors you created.
 
 All entities will be generated automatically and the state will be updated every 15 minutes from the external feed.
@@ -101,3 +105,7 @@ The following [districts are currently supported by this integration](http://www
 * Northern Riverina
 * South Western
 * Far Western
+
+**Please note:** The RFS has recently changed the district name "ACT" to "The Australian Capital Territory". 
+For backwards compatibility reasons I decided to keep the name "ACT" for now. Please let me know if you are a 
+resident of the ACT and would prefer having the full name in this integration.
