@@ -86,3 +86,7 @@ The following [districts are currently supported by this integration](http://www
 * Northern Riverina
 * South Western
 * Far Western
+
+**Please note:** The RFS has recently changed the district name "ACT" to "The Australian Capital Territory". 
+For backwards compatibility reasons I decided to keep the name "ACT" for now. Please let me know if you are a 
+resident of the ACT and would prefer having the full name in this integration.
