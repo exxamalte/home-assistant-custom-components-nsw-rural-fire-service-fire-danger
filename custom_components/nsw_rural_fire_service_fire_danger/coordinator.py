@@ -120,6 +120,9 @@ class NswRfsFireDangerStandardFeedCoordinator(NswRfsFireDangerFeedCoordinator):
                     for district in districts:
                         if XML_NAME in district:
                             district_name = district.get(XML_NAME)
+                            # Workaround for ACT to make it work with the JSON based district names.
+                            if district_name == "The Australian Capital Territory":
+                                district_name = "ACT"
                             if district_name == self._district_name:
                                 # Found it.
                                 for key in XML_SENSOR_ATTRIBUTES:
