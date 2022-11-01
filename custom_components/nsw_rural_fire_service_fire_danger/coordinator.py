@@ -14,7 +14,9 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from pyexpat import ExpatError
 
 from .const import (
+    CONF_CONVERT_NO_RATING,
     CONF_DISTRICT_NAME,
+    DEFAULT_CONVERT_NO_RATING,
     DEFAULT_METHOD,
     DEFAULT_VERIFY_SSL,
     DOMAIN,
@@ -38,6 +40,9 @@ class NswRfsFireDangerFeedCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         """Initialize the Feed Entity Manager."""
         self.hass = hass
         self._district_name = config_entry.data[CONF_DISTRICT_NAME]
+        self._convert_no_rating = config_entry.data.get(
+            CONF_CONVERT_NO_RATING, DEFAULT_CONVERT_NO_RATING
+        )
         self._rest = RestData(
             hass,
             DEFAULT_METHOD,
@@ -122,7 +127,9 @@ class NswRfsFireDangerStandardFeedCoordinator(NswRfsFireDangerFeedCoordinator):
                                         text_value = district.get(key)
                                         conversion = XML_SENSOR_ATTRIBUTES[key][1]
                                         if conversion:
-                                            text_value = conversion(text_value)
+                                            text_value = conversion(
+                                                text_value, self._convert_no_rating
+                                            )
                                         attributes[
                                             XML_SENSOR_ATTRIBUTES[key][0]
                                         ] = text_value
@@ -163,7 +170,9 @@ class NswRfsFireDangerExtendedFeedCoordinator(NswRfsFireDangerFeedCoordinator):
                                             text_value = district.get(key)
                                             conversion = JSON_SENSOR_ATTRIBUTES[key][1]
                                             if conversion:
-                                                text_value = conversion(text_value)
+                                                text_value = conversion(
+                                                    text_value, self._convert_no_rating
+                                                )
                                             attributes[
                                                 JSON_SENSOR_ATTRIBUTES[key][0]
                                             ] = text_value
