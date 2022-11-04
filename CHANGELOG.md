@@ -1,5 +1,10 @@
 # Changes
 
+## 0.12 (01/11/2022)
+* Added option to automatically convert value "NONE" into "No Rating".
+* Fixed issue with district name "ACT" in standard feed.
+* Added integration type "service".
+
 ## 0.11 (20/09/2022)
 * Added support for an extended feed that provides a forecast for 4 days.
 * Replaced deprecated method.
