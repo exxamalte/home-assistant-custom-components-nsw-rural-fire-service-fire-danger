@@ -13,6 +13,7 @@ async def test_component_unload_config_entry(hass: HomeAssistant, config_entry):
     with patch(
         "custom_components.nsw_rural_fire_service_fire_danger.coordinator.NswRfsFireDangerFeedCoordinator.async_update"
     ) as mock_coordinator_update:
+        mock_coordinator_update.return_value = {"a": "x", "b": "y"}
         # Load config entry.
         assert await hass.config_entries.async_setup(config_entry.entry_id)
         await hass.async_block_till_done()
