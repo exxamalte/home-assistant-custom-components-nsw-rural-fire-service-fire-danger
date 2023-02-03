@@ -1,6 +1,7 @@
 # NSW Rural Fire Service - Fire Danger
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)
+[![codecov](https://codecov.io/gh/exxamalte/home-assistant-custom-components-nsw-rural-fire-service-fire-danger/branch/main/graph/badge.svg?token=PIO76MIVIO)](https://codecov.io/gh/exxamalte/home-assistant-custom-components-nsw-rural-fire-service-fire-danger)
 [![GitHub release](https://img.shields.io/github/release/exxamalte/home-assistant-custom-components-nsw-rural-fire-service-fire-danger)](https://gitHub.com/exxamalte/home-assistant-custom-components-nsw-rural-fire-service-fire-danger/releases/)
 [![GitHub license](https://img.shields.io/github/license/exxamalte/home-assistant-custom-components-nsw-rural-fire-service-fire-danger)](https://github.com/exxamalte/home-assistant-custom-components-nsw-rural-fire-service-fire-danger/blob/master/LICENSE)
 [![Buy me a coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg)](https://www.buymeacoffee.com/neonninja)
