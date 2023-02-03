@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request: ~
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    env:
+      USING_COVERAGE: '3.10'
+    strategy:
+      fail-fast: true
+      matrix:
+        python-version: [ "3.9", "3.10", "3.11" ]
+    steps:
+      - uses: "actions/checkout@v2"
+      - uses: "actions/setup-python@v2"
+        with:
+          python-version: "${{ matrix.python-version }}"
+      - name: "Install dependencies"
+        run: |
+          set -xe
+          python -VV
+          python -m site
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install -r requirements.test.txt
+      - name: "Run tests for ${{ matrix.python-version }}"
+        run: |
+          pip install pytest-cov
+          pip install coverage
+          pytest \
+            -qq \
+            --timeout=9 \
+            --durations=10 \
+            -n auto \
+            --cov custom_components.nsw_rural_fire_service_fire_danger \
+            --cov-report xml \
+            -o console_output_style=count \
+            -p no:sugar \
+            tests
+          coverage lcov
+      - name: "Upload coverage to Codecov"
+        if: "contains(env.USING_COVERAGE, matrix.python-version)"
+        uses: "codecov/codecov-action@v1"
+        with:
+          fail_ci_if_error: true
