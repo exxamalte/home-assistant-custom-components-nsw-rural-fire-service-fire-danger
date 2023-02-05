@@ -1,4 +1,4 @@
-"""Define tests for the NSW Rural Fire Service - Fire Danger standard feed."""
+"""Define tests for the NSW Rural Fire Service - Fire Danger extended feed."""
 import logging
 from datetime import timedelta
 from http import HTTPStatus
@@ -25,18 +25,18 @@ from custom_components.nsw_rural_fire_service_fire_danger import (
     DOMAIN,
 )
 
-CONFIG_STANDARD_SYDNEY = {
+CONFIG_EXTENDED_SYDNEY = {
     DOMAIN: {
         CONF_DISTRICT_NAME: "Greater Sydney Region",
-        CONF_DATA_FEED: "standard",
+        CONF_DATA_FEED: "extended",
         CONF_CONVERT_NO_RATING: True,
         CONF_SCAN_INTERVAL: DEFAULT_SCAN_INTERVAL.total_seconds(),
     }
 }
-CONFIG_STANDARD_ACT = {
+CONFIG_EXTENDED_ACT = {
     DOMAIN: {
         CONF_DISTRICT_NAME: "ACT",
-        CONF_DATA_FEED: "standard",
+        CONF_DATA_FEED: "extended",
         CONF_CONVERT_NO_RATING: True,
         CONF_SCAN_INTERVAL: DEFAULT_SCAN_INTERVAL.total_seconds(),
     }
@@ -47,16 +47,16 @@ _LOGGER = logging.getLogger(__name__)
 
 @pytest.mark.asyncio
 @respx.mock
-async def test_feed_standard(hass: HomeAssistant, config_entry):
-    """Test standard feed setup and entities."""
+async def test_feed_extended(hass: HomeAssistant, config_entry):
+    """Test extended feed setup and entities."""
     await async_setup_component(hass, "homeassistant", {})
-    respx.get("http://www.rfs.nsw.gov.au/feeds/fdrToban.xml").respond(
-        status_code=HTTPStatus.OK, text=load_fixture("feed-1.xml")
-    )
+    respx.get(
+        "https://www.rfs.nsw.gov.au/_designs/xml/fire-danger-ratings/fire-danger-ratings-v2"
+    ).respond(status_code=HTTPStatus.OK, text=load_fixture("feed-1.json"))
     assert await async_setup_component(
         hass,
         DOMAIN,
-        CONFIG_STANDARD_SYDNEY,
+        CONFIG_EXTENDED_SYDNEY,
     )
     await hass.async_block_till_done()
 
@@ -66,7 +66,7 @@ async def test_feed_standard(hass: HomeAssistant, config_entry):
     )
     await hass.async_block_till_done()
 
-    assert len(hass.states.async_all("binary_sensor")) == 2
+    assert len(hass.states.async_all("binary_sensor")) == 4
 
     state = hass.states.get(
         "binary_sensor.fire_danger_greater_sydney_region_fire_ban_today"
@@ -114,7 +114,11 @@ async def test_feed_standard(hass: HomeAssistant, config_entry):
         ],
         "danger_level_today": "Moderate",
         "danger_level_tomorrow": "Moderate",
+        "danger_level_day3": "Moderate",
+        "danger_level_day4": "No Rating",
         "fire_ban_tomorrow": False,
+        "fire_ban_day3": False,
+        "fire_ban_day4": False,
         ATTR_ATTRIBUTION: "NSW Rural Fire Service",
         ATTR_DEVICE_CLASS: "safety",
         "friendly_name": "Fire danger Greater Sydney Region Fire ban today",
@@ -166,13 +170,17 @@ async def test_feed_standard(hass: HomeAssistant, config_entry):
         ],
         "danger_level_today": "Moderate",
         "danger_level_tomorrow": "Moderate",
+        "danger_level_day3": "Moderate",
+        "danger_level_day4": "No Rating",
         "fire_ban_today": False,
+        "fire_ban_day3": False,
+        "fire_ban_day4": False,
         ATTR_ATTRIBUTION: "NSW Rural Fire Service",
         ATTR_DEVICE_CLASS: "safety",
         "friendly_name": "Fire danger Greater Sydney Region Fire ban tomorrow",
     }
 
-    assert len(hass.states.async_all("sensor")) == 2
+    assert len(hass.states.async_all("sensor")) == 4
 
     state = hass.states.get(
         "sensor.fire_danger_greater_sydney_region_danger_level_today"
@@ -219,8 +227,12 @@ async def test_feed_standard(hass: HomeAssistant, config_entry):
             " Northern Beaches",
         ],
         "danger_level_tomorrow": "Moderate",
+        "danger_level_day3": "Moderate",
+        "danger_level_day4": "No Rating",
         "fire_ban_today": False,
         "fire_ban_tomorrow": False,
+        "fire_ban_day3": False,
+        "fire_ban_day4": False,
         ATTR_ATTRIBUTION: "NSW Rural Fire Service",
         ATTR_ICON: "mdi:speedometer-medium",
         "friendly_name": "Fire danger Greater Sydney Region Danger level today",
@@ -271,8 +283,12 @@ async def test_feed_standard(hass: HomeAssistant, config_entry):
             " Northern Beaches",
         ],
         "danger_level_today": "Moderate",
+        "danger_level_day3": "Moderate",
+        "danger_level_day4": "No Rating",
         "fire_ban_today": False,
         "fire_ban_tomorrow": False,
+        "fire_ban_day3": False,
+        "fire_ban_day4": False,
         ATTR_ATTRIBUTION: "NSW Rural Fire Service",
         ATTR_ICON: "mdi:speedometer-medium",
         "friendly_name": "Fire danger Greater Sydney Region Danger level tomorrow",
@@ -284,13 +300,13 @@ async def test_feed_standard(hass: HomeAssistant, config_entry):
 async def test_feed_standard_act(hass: HomeAssistant, config_entry):
     """Test standard feed setup and entities."""
     await async_setup_component(hass, "homeassistant", {})
-    respx.get("http://www.rfs.nsw.gov.au/feeds/fdrToban.xml").respond(
-        status_code=HTTPStatus.OK, text=load_fixture("feed-1.xml")
-    )
+    respx.get(
+        "https://www.rfs.nsw.gov.au/_designs/xml/fire-danger-ratings/fire-danger-ratings-v2"
+    ).respond(status_code=HTTPStatus.OK, text=load_fixture("feed-1.json"))
     assert await async_setup_component(
         hass,
         DOMAIN,
-        CONFIG_STANDARD_ACT,
+        CONFIG_EXTENDED_ACT,
     )
     await hass.async_block_till_done()
 
@@ -305,10 +321,15 @@ async def test_feed_standard_act(hass: HomeAssistant, config_entry):
     assert state.name == "Fire danger ACT Fire ban today"
     assert state.attributes == {
         "district": "ACT",
+        "councils": [""],
         "region_number": 8,
         "danger_level_today": "Moderate",
         "danger_level_tomorrow": "Moderate",
+        "danger_level_day3": "Moderate",
+        "danger_level_day4": "Moderate",
         "fire_ban_tomorrow": False,
+        "fire_ban_day3": False,
+        "fire_ban_day4": False,
         ATTR_ATTRIBUTION: "NSW Rural Fire Service",
         ATTR_DEVICE_CLASS: "safety",
         "friendly_name": "Fire danger ACT Fire ban today",
