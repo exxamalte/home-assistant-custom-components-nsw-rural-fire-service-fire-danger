@@ -1,12 +1,20 @@
 """Define tests for the NSW Rural Fire Service - Fire Danger general setup."""
 import logging
+from datetime import timedelta
 from http import HTTPStatus
 
 import pytest
 import respx
-from homeassistant.const import CONF_SCAN_INTERVAL
+from homeassistant.const import (
+    ATTR_ATTRIBUTION,
+    ATTR_DEVICE_CLASS,
+    ATTR_ICON,
+    CONF_SCAN_INTERVAL,
+)
 from homeassistant.core import HomeAssistant
 from homeassistant.setup import async_setup_component
+from homeassistant.util import utcnow
+from pytest_homeassistant_custom_component.common import async_fire_time_changed
 from tests.nsw_rural_fire_service_fire_danger.utils import load_fixture
 
 from custom_components.nsw_rural_fire_service_fire_danger import (
@@ -43,46 +51,221 @@ async def test_feed_standard(hass: HomeAssistant, config_entry):
         CONFIG,
     )
     await hass.async_block_till_done()
-    assert len(hass.states.async_all("sensor")) == 2
-    assert (
-        hass.states.get(
-            "sensor.fire_danger_greater_sydney_region_danger_level_today"
-        ).state
-        == "Moderate"
+
+    # Refresh the coordinator
+    async_fire_time_changed(
+        hass, utcnow() + timedelta(seconds=DEFAULT_SCAN_INTERVAL.total_seconds() + 1)
     )
-    assert (
-        hass.states.get(
-            "sensor.fire_danger_greater_sydney_region_danger_level_tomorrow"
-        ).state
-        == "Moderate"
-    )
+    await hass.async_block_till_done()
+
     assert len(hass.states.async_all("binary_sensor")) == 2
-    assert (
-        hass.states.get(
-            "binary_sensor.fire_danger_greater_sydney_region_fire_ban_today"
-        ).state
-        == "off"
-    )
-    assert (
-        hass.states.get(
-            "binary_sensor.fire_danger_greater_sydney_region_fire_ban_tomorrow"
-        ).state
-        == "off"
-    )
 
+    state = hass.states.get(
+        "binary_sensor.fire_danger_greater_sydney_region_fire_ban_today"
+    )
+    assert state.state == "off"
+    assert state.name == "Fire danger Greater Sydney Region Fire ban today"
+    assert state.attributes == {
+        "district": "Greater Sydney Region",
+        "region_number": 4,
+        "councils": [
+            "The Hills",
+            " Blacktown",
+            " Blue Mountains",
+            " Burwood",
+            " Camden",
+            " Campbelltown",
+            " Canada Bay",
+            " Fairfield",
+            " Hawkesbury",
+            " Hornsby",
+            " Hunters Hill",
+            " Kogarah",
+            " Ku-ring-gai",
+            " Lane Cove",
+            " Liverpool",
+            " Mosman",
+            " North Sydney",
+            " Parramatta",
+            " Penrith",
+            " Randwick",
+            " Ryde",
+            " Strathfield",
+            " Sutherland",
+            " Sydney",
+            " Waverley",
+            " Willoughby",
+            " Woollahra",
+            " Bayside",
+            " Canterbury-Bankstown",
+            " Central Coast",
+            " Cumberland",
+            " Georges River",
+            " Inner West",
+            " Northern Beaches",
+        ],
+        "danger_level_today": "Moderate",
+        "danger_level_tomorrow": "Moderate",
+        "fire_ban_tomorrow": False,
+        ATTR_ATTRIBUTION: "NSW Rural Fire Service",
+        ATTR_DEVICE_CLASS: "safety",
+        "friendly_name": "Fire danger Greater Sydney Region Fire ban today",
+    }
 
-#         state = hass.states.get("binary_sensor.fire_danger_greater_sydney_region_fire_ban_today")
-#         assert state is not None
-#
-#         assert state.name == "Fire danger Greater Sydney Region Fire ban today"
-#         assert state.attributes == {
-#             "district": "Greater Sydney Region",
-#             "region_number": 4,
-#             "councils": ["The Hills", " Blacktown", " Blue Mountains", " Burwood", " Camden", " Campbelltown", " Canada Bay", " Fairfield", " Hawkesbury", " Hornsby", " Hunters Hill", " Kogarah", " Ku-ring-gai", " Lane Cove", " Liverpool", " Mosman", " North Sydney", " Parramatta", " Penrith", " Randwick", " Ryde", " Strathfield", " Sutherland", " Sydney", " Waverley", " Willoughby", " Woollahra", " Bayside", " Canterbury-Bankstown", " Central Coast", " Cumberland", " Georges River", " Inner West", " Northern Beaches"],
-#             "danger_level_today": "Moderate",
-#             "danger_level_tomorrow": "Moderate",
-#             "fire_ban_tomorrow": False,
-#             ATTR_ATTRIBUTION: "NSW Rural Fire Service",
-#             ATTR_DEVICE_CLASS: "safety",
-#             "friendly_name": "Fire danger Greater Sydney Region Fire ban today",
-#         }
+    state = hass.states.get(
+        "binary_sensor.fire_danger_greater_sydney_region_fire_ban_tomorrow"
+    )
+    assert state.state == "off"
+    assert state.name == "Fire danger Greater Sydney Region Fire ban tomorrow"
+    assert state.attributes == {
+        "district": "Greater Sydney Region",
+        "region_number": 4,
+        "councils": [
+            "The Hills",
+            " Blacktown",
+            " Blue Mountains",
+            " Burwood",
+            " Camden",
+            " Campbelltown",
+            " Canada Bay",
+            " Fairfield",
+            " Hawkesbury",
+            " Hornsby",
+            " Hunters Hill",
+            " Kogarah",
+            " Ku-ring-gai",
+            " Lane Cove",
+            " Liverpool",
+            " Mosman",
+            " North Sydney",
+            " Parramatta",
+            " Penrith",
+            " Randwick",
+            " Ryde",
+            " Strathfield",
+            " Sutherland",
+            " Sydney",
+            " Waverley",
+            " Willoughby",
+            " Woollahra",
+            " Bayside",
+            " Canterbury-Bankstown",
+            " Central Coast",
+            " Cumberland",
+            " Georges River",
+            " Inner West",
+            " Northern Beaches",
+        ],
+        "danger_level_today": "Moderate",
+        "danger_level_tomorrow": "Moderate",
+        "fire_ban_today": False,
+        ATTR_ATTRIBUTION: "NSW Rural Fire Service",
+        ATTR_DEVICE_CLASS: "safety",
+        "friendly_name": "Fire danger Greater Sydney Region Fire ban tomorrow",
+    }
+
+    assert len(hass.states.async_all("sensor")) == 2
+
+    state = hass.states.get(
+        "sensor.fire_danger_greater_sydney_region_danger_level_today"
+    )
+    assert state.state == "Moderate"
+    assert state.name == "Fire danger Greater Sydney Region Danger level today"
+    assert state.attributes == {
+        "district": "Greater Sydney Region",
+        "region_number": 4,
+        "councils": [
+            "The Hills",
+            " Blacktown",
+            " Blue Mountains",
+            " Burwood",
+            " Camden",
+            " Campbelltown",
+            " Canada Bay",
+            " Fairfield",
+            " Hawkesbury",
+            " Hornsby",
+            " Hunters Hill",
+            " Kogarah",
+            " Ku-ring-gai",
+            " Lane Cove",
+            " Liverpool",
+            " Mosman",
+            " North Sydney",
+            " Parramatta",
+            " Penrith",
+            " Randwick",
+            " Ryde",
+            " Strathfield",
+            " Sutherland",
+            " Sydney",
+            " Waverley",
+            " Willoughby",
+            " Woollahra",
+            " Bayside",
+            " Canterbury-Bankstown",
+            " Central Coast",
+            " Cumberland",
+            " Georges River",
+            " Inner West",
+            " Northern Beaches",
+        ],
+        "danger_level_tomorrow": "Moderate",
+        "fire_ban_today": False,
+        "fire_ban_tomorrow": False,
+        ATTR_ATTRIBUTION: "NSW Rural Fire Service",
+        ATTR_ICON: "mdi:speedometer-medium",
+        "friendly_name": "Fire danger Greater Sydney Region Danger level today",
+    }
+
+    state = hass.states.get(
+        "sensor.fire_danger_greater_sydney_region_danger_level_tomorrow"
+    )
+    assert state.state == "Moderate"
+    assert state.name == "Fire danger Greater Sydney Region Danger level tomorrow"
+    assert state.attributes == {
+        "district": "Greater Sydney Region",
+        "region_number": 4,
+        "councils": [
+            "The Hills",
+            " Blacktown",
+            " Blue Mountains",
+            " Burwood",
+            " Camden",
+            " Campbelltown",
+            " Canada Bay",
+            " Fairfield",
+            " Hawkesbury",
+            " Hornsby",
+            " Hunters Hill",
+            " Kogarah",
+            " Ku-ring-gai",
+            " Lane Cove",
+            " Liverpool",
+            " Mosman",
+            " North Sydney",
+            " Parramatta",
+            " Penrith",
+            " Randwick",
+            " Ryde",
+            " Strathfield",
+            " Sutherland",
+            " Sydney",
+            " Waverley",
+            " Willoughby",
+            " Woollahra",
+            " Bayside",
+            " Canterbury-Bankstown",
+            " Central Coast",
+            " Cumberland",
+            " Georges River",
+            " Inner West",
+            " Northern Beaches",
+        ],
+        "danger_level_today": "Moderate",
+        "fire_ban_today": False,
+        "fire_ban_tomorrow": False,
+        ATTR_ATTRIBUTION: "NSW Rural Fire Service",
+        ATTR_ICON: "mdi:speedometer-medium",
+        "friendly_name": "Fire danger Greater Sydney Region Danger level tomorrow",
+    }
