@@ -334,3 +334,30 @@ async def test_feed_standard_act(hass: HomeAssistant, config_entry):
         ATTR_DEVICE_CLASS: "safety",
         "friendly_name": "Fire danger ACT Fire ban today",
     }
+
+
+@pytest.mark.asyncio
+@respx.mock
+async def test_feed_extended_invalid(hass: HomeAssistant, config_entry):
+    """Test extended feed setup and entities."""
+    await async_setup_component(hass, "homeassistant", {})
+    respx.get(
+        "https://www.rfs.nsw.gov.au/_designs/xml/fire-danger-ratings/fire-danger-ratings-v2"
+    ).respond(status_code=HTTPStatus.OK, text="NOT JSON")
+    assert await async_setup_component(
+        hass,
+        DOMAIN,
+        CONFIG_EXTENDED_SYDNEY,
+    )
+    await hass.async_block_till_done()
+
+    # Refresh the coordinator
+    async_fire_time_changed(
+        hass, utcnow() + timedelta(seconds=DEFAULT_SCAN_INTERVAL.total_seconds() + 1)
+    )
+    await hass.async_block_till_done()
+
+    state = hass.states.get(
+        "binary_sensor.fire_danger_greater_sydney_region_fire_ban_today"
+    )
+    assert state.state == "unknown"
