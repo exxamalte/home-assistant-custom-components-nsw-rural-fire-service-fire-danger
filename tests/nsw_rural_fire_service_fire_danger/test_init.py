@@ -1,19 +1,27 @@
 """Define tests for the NSW Rural Fire Service - Fire Danger general setup."""
 from unittest.mock import patch
 
+import pytest
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.core import HomeAssistant
 
 from custom_components.nsw_rural_fire_service_fire_danger.const import DOMAIN
 
 
+@pytest.mark.asyncio
 async def test_component_unload_config_entry(hass: HomeAssistant, config_entry):
     """Test that loading and unloading of a config entry works."""
     config_entry.add_to_hass(hass)
     with patch(
         "custom_components.nsw_rural_fire_service_fire_danger.coordinator.NswRfsFireDangerFeedCoordinator.async_update"
     ) as mock_coordinator_update:
-        mock_coordinator_update.return_value = {"a": "x", "b": "y"}
+        mock_coordinator_update.return_value = {
+            "fire_ban_today": True,
+            "fire_ban_tomorrow": False,
+            "danger_level_today": "Moderate",
+            "danger_level_tomorrow": "No Rating",
+            "region_number": 4,
+        }
         # Load config entry.
         assert await hass.config_entries.async_setup(config_entry.entry_id)
         await hass.async_block_till_done()

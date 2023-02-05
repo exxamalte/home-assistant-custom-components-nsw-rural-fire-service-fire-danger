@@ -1,2 +1,3 @@
 pytest-homeassistant-custom-component==0.12.53
 pytest-asyncio
+respx
