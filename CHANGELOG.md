@@ -1,5 +1,11 @@
 # Changes
 
+## 0.13b1 (07/02/2023)
+* Fixed the way how council names are parsed, removing whitespace around the name.
+* Fixed internal configuration setup process (probably won't have any effect on users).
+* Added automated testing.
+* Bump library version dependencies.
+
 ## 0.12 (01/11/2022)
 * Added option to automatically convert value "NONE" into "No Rating".
 * Fixed issue with district name "ACT" in standard feed.
