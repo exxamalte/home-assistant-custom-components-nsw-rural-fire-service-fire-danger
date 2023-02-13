@@ -1,6 +1,6 @@
 # Changes
 
-## 0.13b1 (07/02/2023)
+## 0.13 (13/02/2023)
 * Fixed the way how council names are parsed, removing whitespace around the name.
 * Fixed internal configuration setup process (probably won't have any effect on users).
 * Added automated testing.
