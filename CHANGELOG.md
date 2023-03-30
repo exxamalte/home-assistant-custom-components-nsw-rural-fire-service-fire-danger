@@ -1,5 +1,11 @@
 # Changes
 
+## 0.14 (31/03/2023)
+* Fix for signature change in rest data class in Home Assistant 2023.4.0.
+  **Please upgrade, previous versions of this integration will not work with 2023.4.0+.** 
+* Added Portuguese translation (thanks @ViPeR5000).
+* Added German translation.
+
 ## 0.13 (13/02/2023)
 * Fixed the way how council names are parsed, removing whitespace around the name.
 * Fixed internal configuration setup process (probably won't have any effect on users).
