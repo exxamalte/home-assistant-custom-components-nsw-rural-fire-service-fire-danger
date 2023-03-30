@@ -23,19 +23,22 @@ This custom component automatically generates the following entities:
 {% if installed %}
 ## Notes
 {% if version_installed.replace("v", "").replace(".","") | int <= 5  %}
-Please update to v0.5 when upgrading to Home Assistant 2020.12.
+* Please update to v0.5 when upgrading to Home Assistant 2020.12.
 {% endif %}
 {% if version_installed.replace("v", "").replace(".","") | int <= 6  %}
-Please update to v0.6 when upgrading to Home Assistant 2021.1 or later.
+* Please update to v0.6 when upgrading to Home Assistant 2021.1 or later.
 {% endif %}
 {% if version_installed.replace("v", "").replace(".","") | int <= 9  %}
-Please update to v0.9 when upgrading to Home Assistant 2021.12 or later.
+* Please update to v0.9 when upgrading to Home Assistant 2021.12 or later.
 {% endif %}
 {% if version_installed.replace("v", "").replace(".","") | int <= 10  %}
-Please update to v0.10 when upgrading to Home Assistant 2022.07 or later.
+* Please update to v0.10 when upgrading to Home Assistant 2022.07 or later.
 {% endif %}
 {% if version_installed.replace("v", "").replace(".","") | int <= 11  %}
-Please update to v0.11 when upgrading to Home Assistant 2022.12 or later.
+* Please update to v0.11 when upgrading to Home Assistant 2022.12 or later.
+{% endif %}
+{% if version_installed.replace("v", "").replace(".","") | int <= 14  %}
+* Please update to v0.14 when upgrading to Home Assistant 2023.4 or later.
 {% endif %}
 {% endif %}
 
