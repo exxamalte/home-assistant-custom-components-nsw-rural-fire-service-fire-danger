@@ -1,5 +1,9 @@
 # Changes
 
+## 0.15 (05/04/2023)
+* Fix for missing encoding when reading standard feed in Home Assistant 2023.4.0.
+* Fix for Portuguese translation.
+
 ## 0.14 (31/03/2023)
 * Fix for signature change in rest data class in Home Assistant 2023.4.0.
   **Please upgrade, previous versions of this integration will not work with 2023.4.0+.** 
