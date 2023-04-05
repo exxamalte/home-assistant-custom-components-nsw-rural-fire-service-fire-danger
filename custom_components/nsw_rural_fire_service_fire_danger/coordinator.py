@@ -65,7 +65,7 @@ class NswRfsFireDangerFeedCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 hass,
                 DEFAULT_METHOD,
                 URL_DATA[self._data_feed_type()],
-                DEFAULT_ENCODING,
+                None,
                 None,
                 None,
                 None,
