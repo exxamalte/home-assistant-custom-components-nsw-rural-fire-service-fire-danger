@@ -38,7 +38,10 @@ This custom component automatically generates the following entities:
 * Please update to v0.11 when upgrading to Home Assistant 2022.12 or later.
 {% endif %}
 {% if version_installed.replace("v", "").replace(".","") | int <= 14  %}
-* Please update to v0.14 when upgrading to Home Assistant 2023.4 or later.
+* Please update to v0.15 when upgrading to Home Assistant 2023.4 or later.
+{% endif %}
+{% if version_installed.replace("v", "").replace(".","") | int <= 15  %}
+* Please update to v0.16 when upgrading to Home Assistant 2023.5 or later.
 {% endif %}
 {% endif %}
 
