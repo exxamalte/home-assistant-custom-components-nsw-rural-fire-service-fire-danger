@@ -265,13 +265,7 @@
       "areaId": "21",
       "areaCouncils": "Bourke; Brewarrina; Broken Hill; Central Darling; Cobar",
       "ratingToday": "MODERATE",
-      "ratingTomorrow": "NONE",
-      "ratingDay3": "MODERATE",
-      "ratingDay4": "MODERATE",
-      "tobanToday": "No",
-      "tobanTomorrow": "No",
-      "tobanDay3": "No",
-      "tobanDay4": "No"
+      "tobanToday": "No"
     }
   ],
   "lastUpdatedIso": "2023-02-04T16:39:32+11:00",
