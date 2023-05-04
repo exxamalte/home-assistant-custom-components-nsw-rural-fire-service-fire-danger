@@ -1,5 +1,8 @@
 # Changes
 
+## 0.17 (05/05/2023)
+* Fix an issue where data is missing from the feed. If this is the case the respective sensor will show as state "unknown".
+
 ## 0.16 (27/04/2023)
 * Fix for signature change in rest data class in Home Assistant 2023.5.0.
   **Please upgrade, previous versions of this integration will not work with 2023.5.0+.** 
