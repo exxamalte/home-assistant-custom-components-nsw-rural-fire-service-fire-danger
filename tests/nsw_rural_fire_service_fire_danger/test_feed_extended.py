@@ -41,6 +41,14 @@ CONFIG_EXTENDED_ACT = {
         CONF_SCAN_INTERVAL: DEFAULT_SCAN_INTERVAL.total_seconds(),
     }
 }
+CONFIG_EXTENDED_FAR_WESTERN = {
+    DOMAIN: {
+        CONF_DISTRICT_NAME: "Far Western",
+        CONF_DATA_FEED: "extended",
+        CONF_CONVERT_NO_RATING: True,
+        CONF_SCAN_INTERVAL: DEFAULT_SCAN_INTERVAL.total_seconds(),
+    }
+}
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -297,7 +305,7 @@ async def test_feed_extended(hass: HomeAssistant, config_entry):
 
 @pytest.mark.asyncio
 @respx.mock
-async def test_feed_standard_act(hass: HomeAssistant, config_entry):
+async def test_feed_extended_act(hass: HomeAssistant, config_entry):
     """Test standard feed setup and entities."""
     await async_setup_component(hass, "homeassistant", {})
     respx.get(
@@ -333,6 +341,45 @@ async def test_feed_standard_act(hass: HomeAssistant, config_entry):
         ATTR_DEVICE_CLASS: "safety",
         "friendly_name": "Fire danger ACT Fire ban today",
     }
+
+
+@pytest.mark.asyncio
+@respx.mock
+async def test_feed_extended_missing_data(hass: HomeAssistant, config_entry):
+    """Test standard feed setup and entities."""
+    await async_setup_component(hass, "homeassistant", {})
+    respx.get(
+        "https://www.rfs.nsw.gov.au/_designs/xml/fire-danger-ratings/fire-danger-ratings-v2"
+    ).respond(status_code=HTTPStatus.OK, text=load_fixture("feed-1.json"))
+    assert await async_setup_component(
+        hass,
+        DOMAIN,
+        CONFIG_EXTENDED_FAR_WESTERN,
+    )
+    await hass.async_block_till_done()
+
+    # Refresh the coordinator
+    async_fire_time_changed(
+        hass, utcnow() + timedelta(seconds=DEFAULT_SCAN_INTERVAL.total_seconds() + 1)
+    )
+    await hass.async_block_till_done()
+
+    state = hass.states.get("binary_sensor.fire_danger_far_western_fire_ban_today")
+    assert state.state == "off"
+    state = hass.states.get("binary_sensor.fire_danger_far_western_fire_ban_tomorrow")
+    assert state.state == "unknown"
+    state = hass.states.get("binary_sensor.fire_danger_far_western_fire_ban_day_3")
+    assert state.state == "unknown"
+    state = hass.states.get("binary_sensor.fire_danger_far_western_fire_ban_day_4")
+    assert state.state == "unknown"
+    state = hass.states.get("sensor.fire_danger_far_western_danger_level_today")
+    assert state.state == "Moderate"
+    state = hass.states.get("sensor.fire_danger_far_western_danger_level_tomorrow")
+    assert state.state == "unknown"
+    state = hass.states.get("sensor.fire_danger_far_western_danger_level_day_3")
+    assert state.state == "unknown"
+    state = hass.states.get("sensor.fire_danger_far_western_danger_level_day_4")
+    assert state.state == "unknown"
 
 
 @pytest.mark.asyncio
