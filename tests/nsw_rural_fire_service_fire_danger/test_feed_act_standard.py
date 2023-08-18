@@ -25,7 +25,7 @@ from custom_components.nsw_rural_fire_service_fire_danger import (
     DOMAIN,
 )
 
-CONFIG_STANDARD_ACT = {
+CONFIG_ACT_STANDARD_ACT = {
     DOMAIN: {
         CONF_DISTRICT_NAME: "ACT",
         CONF_DATA_FEED: "act_standard",
@@ -48,7 +48,7 @@ async def test_feed_standard_act(hass: HomeAssistant, config_entry):
     assert await async_setup_component(
         hass,
         DOMAIN,
-        CONFIG_STANDARD_ACT,
+        CONFIG_ACT_STANDARD_ACT,
     )
     await hass.async_block_till_done()
 
@@ -60,18 +60,18 @@ async def test_feed_standard_act(hass: HomeAssistant, config_entry):
 
     assert len(hass.states.async_all("binary_sensor")) == 2
 
-    state = hass.states.get("binary_sensor.fire_danger_act_fire_ban_today")
+    state = hass.states.get("binary_sensor.fire_danger_act_esa_fire_ban_today")
     assert state.state == "off"
-    assert state.name == "Fire danger ACT Fire ban today"
+    assert state.name == "Fire danger ACT (ESA) Fire ban today"
     assert state.attributes == {
-        "district": "ACT",
+        "district": "ACT (ESA)",
         "region_number": 8,
         "danger_level_today": "No Rating",
         "danger_level_tomorrow": "No Rating",
         "fire_ban_tomorrow": False,
         ATTR_ATTRIBUTION: "ACT Emergency Services Agency",
         ATTR_DEVICE_CLASS: "safety",
-        "friendly_name": "Fire danger ACT Fire ban today",
+        "friendly_name": "Fire danger ACT (ESA) Fire ban today",
         "last_build_date": datetime(
             2023, 8, 13, 10, 24, 5, tzinfo=timezone(timedelta(seconds=36000))
         ),
@@ -80,18 +80,18 @@ async def test_feed_standard_act(hass: HomeAssistant, config_entry):
         ),
     }
 
-    state = hass.states.get("binary_sensor.fire_danger_act_fire_ban_tomorrow")
+    state = hass.states.get("binary_sensor.fire_danger_act_esa_fire_ban_tomorrow")
     assert state.state == "off"
-    assert state.name == "Fire danger ACT Fire ban tomorrow"
+    assert state.name == "Fire danger ACT (ESA) Fire ban tomorrow"
     assert state.attributes == {
-        "district": "ACT",
+        "district": "ACT (ESA)",
         "region_number": 8,
         "danger_level_today": "No Rating",
         "danger_level_tomorrow": "No Rating",
         "fire_ban_today": False,
         ATTR_ATTRIBUTION: "ACT Emergency Services Agency",
         ATTR_DEVICE_CLASS: "safety",
-        "friendly_name": "Fire danger ACT Fire ban tomorrow",
+        "friendly_name": "Fire danger ACT (ESA) Fire ban tomorrow",
         "last_build_date": datetime(
             2023, 8, 13, 10, 24, 5, tzinfo=timezone(timedelta(seconds=36000))
         ),
@@ -102,18 +102,18 @@ async def test_feed_standard_act(hass: HomeAssistant, config_entry):
 
     assert len(hass.states.async_all("sensor")) == 2
 
-    state = hass.states.get("sensor.fire_danger_act_danger_level_today")
+    state = hass.states.get("sensor.fire_danger_act_esa_danger_level_today")
     assert state.state == "No Rating"
-    assert state.name == "Fire danger ACT Danger level today"
+    assert state.name == "Fire danger ACT (ESA) Danger level today"
     assert state.attributes == {
-        "district": "ACT",
+        "district": "ACT (ESA)",
         "region_number": 8,
         "danger_level_tomorrow": "No Rating",
         "fire_ban_today": False,
         "fire_ban_tomorrow": False,
         ATTR_ATTRIBUTION: "ACT Emergency Services Agency",
         ATTR_ICON: "mdi:speedometer-medium",
-        "friendly_name": "Fire danger ACT Danger level today",
+        "friendly_name": "Fire danger ACT (ESA) Danger level today",
         "last_build_date": datetime(
             2023, 8, 13, 10, 24, 5, tzinfo=timezone(timedelta(seconds=36000))
         ),
@@ -122,18 +122,18 @@ async def test_feed_standard_act(hass: HomeAssistant, config_entry):
         ),
     }
 
-    state = hass.states.get("sensor.fire_danger_act_danger_level_tomorrow")
+    state = hass.states.get("sensor.fire_danger_act_esa_danger_level_tomorrow")
     assert state.state == "No Rating"
-    assert state.name == "Fire danger ACT Danger level tomorrow"
+    assert state.name == "Fire danger ACT (ESA) Danger level tomorrow"
     assert state.attributes == {
-        "district": "ACT",
+        "district": "ACT (ESA)",
         "region_number": 8,
         "danger_level_today": "No Rating",
         "fire_ban_today": False,
         "fire_ban_tomorrow": False,
         ATTR_ATTRIBUTION: "ACT Emergency Services Agency",
         ATTR_ICON: "mdi:speedometer-medium",
-        "friendly_name": "Fire danger ACT Danger level tomorrow",
+        "friendly_name": "Fire danger ACT (ESA) Danger level tomorrow",
         "last_build_date": datetime(
             2023, 8, 13, 10, 24, 5, tzinfo=timezone(timedelta(seconds=36000))
         ),
@@ -156,7 +156,7 @@ async def test_feed_standard_act(hass: HomeAssistant, config_entry):
 #     assert await async_setup_component(
 #         hass,
 #         DOMAIN,
-#         CONFIG_STANDARD_ACT,
+#         CONFIG_ACT_STANDARD_ACT,
 #     )
 #     await hass.async_block_till_done()
 
@@ -166,13 +166,13 @@ async def test_feed_standard_act(hass: HomeAssistant, config_entry):
 #     )
 #     await hass.async_block_till_done()
 
-#     state = hass.states.get("binary_sensor.fire_danger_act_fire_ban_today")
+#     state = hass.states.get("binary_sensor.fire_danger_act_esa_fire_ban_today")
 #     assert state.state == "off"
-#     state = hass.states.get("binary_sensor.fire_danger_act_fire_ban_tomorrow")
+#     state = hass.states.get("binary_sensor.fire_danger_act_esa_fire_ban_tomorrow")
 #     assert state.state == "unknown"
-#     state = hass.states.get("sensor.fire_danger_act_danger_level_today")
+#     state = hass.states.get("sensor.fire_danger_act_esa_danger_level_today")
 #     assert state.state == "No Rating"
-#     state = hass.states.get("sensor.fire_danger_act_danger_level_tomorrow")
+#     state = hass.states.get("sensor.fire_danger_act_esa_danger_level_tomorrow")
 #     assert state.state == "unknown"
 
 
@@ -187,7 +187,7 @@ async def test_feed_standard_invalid(hass: HomeAssistant, config_entry):
     assert await async_setup_component(
         hass,
         DOMAIN,
-        CONFIG_STANDARD_ACT,
+        CONFIG_ACT_STANDARD_ACT,
     )
     await hass.async_block_till_done()
 
@@ -197,5 +197,5 @@ async def test_feed_standard_invalid(hass: HomeAssistant, config_entry):
     )
     await hass.async_block_till_done()
 
-    state = hass.states.get("binary_sensor.fire_danger_act_fire_ban_today")
+    state = hass.states.get("binary_sensor.fire_danger_act_esa_fire_ban_today")
     assert state.state == "unknown"

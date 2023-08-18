@@ -6,6 +6,7 @@ from homeassistant import config_entries, data_entry_flow
 from homeassistant.const import CONF_SCAN_INTERVAL
 
 from custom_components.nsw_rural_fire_service_fire_danger import (
+    CONF_DATA_FEED,
     CONF_DISTRICT_NAME,
     DOMAIN,
 )
@@ -22,6 +23,35 @@ async def test_duplicate_error(hass, config_entry):
     )
     assert result["type"] == data_entry_flow.FlowResultType.ABORT
     assert result["reason"] == "already_configured"
+
+
+@pytest.mark.asyncio
+async def test_act_duplicate_error(hass, act_config_entry):
+    """Test that you can have both the ESA and RFS entries for the ACT."""
+    conf = {CONF_DISTRICT_NAME: "ACT", CONF_DATA_FEED: "act_standard"}
+    act_config_entry.add_to_hass(hass)
+
+    with patch(
+        "custom_components.nsw_rural_fire_service_fire_danger.coordinator.NswRfsFireDangerFeedCoordinator.async_update"
+    ) as mock_coordinator_update:
+        mock_coordinator_update.return_value = {
+            "fire_ban_today": True,
+            "fire_ban_tomorrow": False,
+            "danger_level_today": "Moderate",
+            "danger_level_tomorrow": "No Rating",
+            "region_number": 8,
+        }
+
+        result = await hass.config_entries.flow.async_init(
+            DOMAIN, context={"source": config_entries.SOURCE_USER}, data=conf
+        )
+        assert result["type"] == data_entry_flow.FlowResultType.CREATE_ENTRY
+        assert result["title"] == "ACT ESA"
+        assert result["data"] == {
+            CONF_DISTRICT_NAME: "ACT",
+            CONF_SCAN_INTERVAL: 900,
+            CONF_DATA_FEED: "act_standard",
+        }
 
 
 async def test_show_form(hass):

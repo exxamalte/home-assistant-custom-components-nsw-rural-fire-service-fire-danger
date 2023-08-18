@@ -38,3 +38,19 @@ def config_entry():
         title="Greater Sydney Region",
         unique_id="Greater Sydney Region",
     )
+
+
+@pytest.fixture
+def act_config_entry():
+    """Create a mock ACT config entry."""
+    return MockConfigEntry(
+        domain=DOMAIN,
+        data={
+            CONF_DISTRICT_NAME: "ACT",
+            CONF_DATA_FEED: "standard",
+            CONF_CONVERT_NO_RATING: True,
+            CONF_SCAN_INTERVAL: DEFAULT_SCAN_INTERVAL.total_seconds(),
+        },
+        title="ACT",
+        unique_id="ACT",
+    )

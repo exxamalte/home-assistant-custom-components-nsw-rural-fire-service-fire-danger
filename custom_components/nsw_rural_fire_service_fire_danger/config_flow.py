@@ -66,7 +66,8 @@ class NswRuralFireServiceFireDangerFlowHandler(
         """Handle the start of the config flow."""
         if not user_input:
             return await self._show_form()
-        if user_input[CONF_DATA_FEED] in ACT_DATA_FEEDS:
+        data_feed = user_input.get(CONF_DATA_FEED, None)
+        if data_feed in ACT_DATA_FEEDS:
             identifier = f"{user_input[CONF_DISTRICT_NAME]} {ACT_IDENTIFIER_SUFFIX}"
         else:
             identifier = f"{user_input[CONF_DISTRICT_NAME]}"
