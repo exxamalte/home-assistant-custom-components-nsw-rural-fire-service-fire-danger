@@ -36,11 +36,15 @@ XML_SENSOR_ATTRIBUTES: Final = {
     "Councils": ["councils", lambda x, y: [z.strip() for z in x.split(";")]],
     "DangerLevelToday": [
         "danger_level_today",
-        lambda x, y: x.lower().capitalize() if x != "NONE" or not y else "No Rating",
+        lambda x, y: " ".join([w.lower().capitalize() for w in x.split(" ")])
+        if x != "NONE" or not y
+        else "No Rating",
     ],
     "DangerLevelTomorrow": [
         "danger_level_tomorrow",
-        lambda x, y: x.lower().capitalize() if x != "NONE" or not y else "No Rating",
+        lambda x, y: " ".join([w.lower().capitalize() for w in x.split(" ")])
+        if x != "NONE" or not y
+        else "No Rating",
     ],
     "FireBanToday": ["fire_ban_today", lambda x, y: x == "Yes"],
     "FireBanTomorrow": ["fire_ban_tomorrow", lambda x, y: x == "Yes"],
