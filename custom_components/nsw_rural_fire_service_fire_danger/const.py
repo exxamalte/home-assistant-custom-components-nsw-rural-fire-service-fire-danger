@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from typing import Final
 
 from homeassistant.const import Platform
+from homeassistant.util import dt as dt_util
 
 CONF_CONVERT_NO_RATING: Final = "convert_no_rating"
 CONF_DISTRICT_NAME: Final = "district_name"
@@ -53,11 +54,11 @@ XML_EXTRA_ATTRIBUTES: Final = {
     # <XML Key>: [<Display Name>, <Conversion Function>]
     "lastBuildDate": [
         "last_build_date",
-        lambda x, y: datetime.strptime(x, "%a, %d %b %Y %H:%M:%S %z"),
+        lambda x, y: dt_util.as_utc(datetime.strptime(x, "%a, %d %b %Y %H:%M:%S %z")),
     ],
     "pubDate": [
         "publish_date",
-        lambda x, y: datetime.strptime(x, "%a, %d %b %Y %H:%M:%S %z"),
+        lambda x, y: dt_util.as_utc(datetime.strptime(x, "%a, %d %b %Y %H:%M:%S %z")),
     ],
 }
 
