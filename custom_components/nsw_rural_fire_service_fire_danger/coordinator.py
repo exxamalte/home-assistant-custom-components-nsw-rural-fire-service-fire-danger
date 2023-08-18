@@ -14,6 +14,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from pyexpat import ExpatError
 
 from .const import (
+    ACT_DISTRICT_SUFFIX,
     CONF_CONVERT_NO_RATING,
     CONF_DISTRICT_NAME,
     DEFAULT_CONVERT_NO_RATING,
@@ -226,6 +227,11 @@ class ActEsaFireDangerStandardFeedCoordinator(NswRfsFireDangerStandardFeedCoordi
             except ExpatError as ex:
                 _LOGGER.warning("Unable to parse feed data: %s", ex)
         return attributes
+
+    @property
+    def district_name(self) -> str:
+        """Return the district name of the coordinator."""
+        return f"{self._district_name} {ACT_DISTRICT_SUFFIX}"
 
 
 class NswRfsFireDangerExtendedFeedCoordinator(NswRfsFireDangerFeedCoordinator):

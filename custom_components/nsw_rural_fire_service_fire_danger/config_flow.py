@@ -11,6 +11,8 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.data_entry_flow import FlowResult
 
 from .const import (
+    ACT_DATA_FEEDS,
+    ACT_IDENTIFIER_SUFFIX,
     CONF_CONVERT_NO_RATING,
     CONF_DATA_FEED,
     CONF_DISTRICT_NAME,
@@ -26,10 +28,7 @@ from .const import (
 @callback
 def configured_instances(hass: HomeAssistant):
     """Return a set of configured NSW Rural Fire Service Fire Danger instances."""
-    return {
-        f"{entry.data[CONF_DISTRICT_NAME]}"
-        for entry in hass.config_entries.async_entries(DOMAIN)
-    }
+    return {f"{entry.unique_id}" for entry in hass.config_entries.async_entries(DOMAIN)}
 
 
 class NswRuralFireServiceFireDangerFlowHandler(
@@ -67,12 +66,14 @@ class NswRuralFireServiceFireDangerFlowHandler(
         """Handle the start of the config flow."""
         if not user_input:
             return await self._show_form()
-
-        identifier = f"{user_input[CONF_DISTRICT_NAME]}"
+        if user_input[CONF_DATA_FEED] in ACT_DATA_FEEDS:
+            identifier = f"{user_input[CONF_DISTRICT_NAME]} {ACT_IDENTIFIER_SUFFIX}"
+        else:
+            identifier = f"{user_input[CONF_DISTRICT_NAME]}"
         await self.async_set_unique_id(identifier)
         self._abort_if_unique_id_configured()
 
-        if identifier in configured_instances(self.hass):
+        if self.unique_id in configured_instances(self.hass):
             return self.async_abort(reason="already_configured")
 
         scan_interval = user_input.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)

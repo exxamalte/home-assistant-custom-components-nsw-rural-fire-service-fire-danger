@@ -9,7 +9,7 @@ CONF_DISTRICT_NAME: Final = "district_name"
 CONF_DATA_FEED: Final = "data_feed"
 
 DEFAULT_ATTRIBUTION: Final = "NSW Rural Fire Service"
-DEFAULT_ACT_ATTRIBUTION = "ACT Emergency Services Agency"
+DEFAULT_ATTRIBUTION_ACT = "ACT Emergency Services Agency"
 
 DEFAULT_DATA_FEED: Final = "standard"
 
@@ -133,10 +133,11 @@ URL_DATA: Final = {
 }
 
 URL_SERVICE: Final = "http://www.rfs.nsw.gov.au/"
-ACT_URL_SERVICE: Final = "https://esa.act.gov.au/"
+URL_SERVICE_ACT: Final = "https://esa.act.gov.au/"
 
 
 VALID_DATA_FEEDS: Final = ["standard", "extended", "act_standard"]
+ACT_DATA_FEEDS: Final = ["act_standard"]
 
 VALID_DISTRICT_NAMES: Final = [
     "Far North Coast",
@@ -161,3 +162,6 @@ VALID_DISTRICT_NAMES: Final = [
     "South Western",
     "Far Western",
 ]
+
+ACT_IDENTIFIER_SUFFIX: Final = "ESA"
+ACT_DISTRICT_SUFFIX: Final = "(ESA)"
