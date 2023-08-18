@@ -25,9 +25,12 @@ from .const import (
     JSON_FIRE_WEATHER_AREA_RATINGS,
     JSON_SENSOR_ATTRIBUTES,
     URL_DATA,
+    XML_CHANNEL,
     XML_DISTRICT,
+    XML_EXTRA_ATTRIBUTES,
     XML_FIRE_DANGER_MAP,
     XML_NAME,
+    XML_RSS,
     XML_SENSOR_ATTRIBUTES,
 )
 
@@ -171,6 +174,55 @@ class NswRfsFireDangerStandardFeedCoordinator(NswRfsFireDangerFeedCoordinator):
                                             XML_SENSOR_ATTRIBUTES[key][0]
                                         ] = text_value
                                 break
+            except ExpatError as ex:
+                _LOGGER.warning("Unable to parse feed data: %s", ex)
+        return attributes
+
+
+class ActEsaFireDangerStandardFeedCoordinator(NswRfsFireDangerStandardFeedCoordinator):
+    """Feed Entity Manager for ACT Emergency Services Agency Fire Danger feed."""
+
+    def _data_feed_type(self) -> str:
+        """Return the data feed type that this coordinator supports."""
+        return "act_standard"
+
+    async def _parse_data(self, value) -> dict[str, str]:
+        """Parse data and extract relevant information."""
+        attributes = {}
+        if value:
+            try:
+                # Turn XML payload into dict.
+                value = xmltodict.parse(value)
+
+                root_attributes = self._attribute_in_structure(
+                    value, [XML_RSS, XML_CHANNEL]
+                )
+
+                district = self._attribute_in_structure(
+                    root_attributes, [XML_FIRE_DANGER_MAP, XML_DISTRICT]
+                )
+                if district and isinstance(district, dict):
+                    district_name = district.get(XML_NAME, "")
+                    # Noting we only have a single district
+                    if district_name == self._district_name:
+                        for key in XML_SENSOR_ATTRIBUTES:
+                            if key in district:
+                                text_value = district.get(key)
+                                conversion = XML_SENSOR_ATTRIBUTES[key][1]
+                                if conversion:
+                                    text_value = conversion(
+                                        text_value, self._convert_no_rating
+                                    )
+                                attributes[XML_SENSOR_ATTRIBUTES[key][0]] = text_value
+                        for key in XML_EXTRA_ATTRIBUTES:
+                            if key in root_attributes:
+                                text_value = root_attributes.get(key)
+                                conversion = XML_EXTRA_ATTRIBUTES[key][1]
+                                if conversion:
+                                    text_value = conversion(
+                                        text_value, self._convert_no_rating
+                                    )
+                                attributes[XML_EXTRA_ATTRIBUTES[key][0]] = text_value
             except ExpatError as ex:
                 _LOGGER.warning("Unable to parse feed data: %s", ex)
         return attributes

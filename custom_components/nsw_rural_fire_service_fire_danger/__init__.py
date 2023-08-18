@@ -21,6 +21,7 @@ from .const import (
     VALID_DATA_FEEDS,
 )
 from .coordinator import (
+    ActEsaFireDangerStandardFeedCoordinator,
     NswRfsFireDangerExtendedFeedCoordinator,
     NswRfsFireDangerFeedCoordinator,
     NswRfsFireDangerStandardFeedCoordinator,
@@ -88,6 +89,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         data_feed_coordinator = NswRfsFireDangerStandardFeedCoordinator(hass, entry)
     elif data_feed == "extended":
         data_feed_coordinator = NswRfsFireDangerExtendedFeedCoordinator(hass, entry)
+    elif data_feed == "act_standard":
+        data_feed_coordinator = ActEsaFireDangerStandardFeedCoordinator(hass, entry)
     else:
         raise NotImplementedError(f"Unsupported data feed type {data_feed} selected.")
     hass.data[DOMAIN][entry.entry_id] = data_feed_coordinator

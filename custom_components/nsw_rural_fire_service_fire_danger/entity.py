@@ -11,8 +11,9 @@ from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from . import NswRfsFireDangerFeedCoordinator
+from . import ActEsaFireDangerStandardFeedCoordinator, NswRfsFireDangerFeedCoordinator
 from .const import (
+    DEFAULT_ACT_ATTRIBUTION,
     DEFAULT_ATTRIBUTION,
     DEFAULT_FORCE_UPDATE,
     DEFAULT_NAME_PREFIX,
@@ -27,7 +28,6 @@ _LOGGER = logging.getLogger(__name__)
 class NswFireServiceFireDangerEntity(CoordinatorEntity[dict[str, Any]]):
     """Implementation of a generic entity."""
 
-    _attr_attribution = DEFAULT_ATTRIBUTION
     _attr_force_update = DEFAULT_FORCE_UPDATE
     _attr_has_entity_name = True
 
@@ -51,6 +51,11 @@ class NswFireServiceFireDangerEntity(CoordinatorEntity[dict[str, Any]]):
             entry_type=DeviceEntryType.SERVICE,
             configuration_url=URL_SERVICE,
         )
+
+        if isinstance(coordinator, ActEsaFireDangerStandardFeedCoordinator):
+            self._attr_attribution = DEFAULT_ACT_ATTRIBUTION
+        else:
+            self._attr_attribution = DEFAULT_ATTRIBUTION
 
     async def async_added_to_hass(self) -> None:
         """Handle entity which will be added."""
