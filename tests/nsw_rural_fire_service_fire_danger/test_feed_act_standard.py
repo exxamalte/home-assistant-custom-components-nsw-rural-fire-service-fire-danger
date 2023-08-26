@@ -143,39 +143,6 @@ async def test_feed_standard_act(hass: HomeAssistant, config_entry):
     }
 
 
-# Commented out until I can work out if this is something we do
-
-# @pytest.mark.asyncio
-# @respx.mock
-# async def test_feed_standard_missing_data(hass: HomeAssistant, config_entry):
-#     """Test standard feed setup and entities."""
-#     await async_setup_component(hass, "homeassistant", {})
-#     respx.get("https://esa.act.gov.au/feeds/firedangerrating.xml").respond(
-#         status_code=HTTPStatus.OK, text=load_fixture("feed-1.xml")
-#     )
-#     assert await async_setup_component(
-#         hass,
-#         DOMAIN,
-#         CONFIG_ACT_STANDARD_ACT,
-#     )
-#     await hass.async_block_till_done()
-
-#     # Refresh the coordinator
-#     async_fire_time_changed(
-#         hass, utcnow() + timedelta(seconds=DEFAULT_SCAN_INTERVAL.total_seconds() + 1)
-#     )
-#     await hass.async_block_till_done()
-
-#     state = hass.states.get("binary_sensor.fire_danger_act_esa_fire_ban_today")
-#     assert state.state == "off"
-#     state = hass.states.get("binary_sensor.fire_danger_act_esa_fire_ban_tomorrow")
-#     assert state.state == "unknown"
-#     state = hass.states.get("sensor.fire_danger_act_esa_danger_level_today")
-#     assert state.state == "No Rating"
-#     state = hass.states.get("sensor.fire_danger_act_esa_danger_level_tomorrow")
-#     assert state.state == "unknown"
-
-
 @pytest.mark.asyncio
 @respx.mock
 async def test_feed_standard_invalid(hass: HomeAssistant, config_entry):
