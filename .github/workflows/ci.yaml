@@ -19,6 +19,11 @@ jobs:
         python-version: [ "3.10", "3.11" ]
     steps:
       - uses: "actions/checkout@v2"
+      - name: Install additional OS dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install \
+            python-dev
       - uses: "actions/setup-python@v2"
         with:
           python-version: "${{ matrix.python-version }}"
