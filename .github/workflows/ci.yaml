@@ -19,11 +19,6 @@ jobs:
         python-version: [ "3.10", "3.12" ]
     steps:
       - uses: "actions/checkout@v2"
-      - name: Install additional OS dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get -y install \
-            python3-dev
       - uses: "actions/setup-python@v2"
         with:
           python-version: "${{ matrix.python-version }}"
@@ -32,7 +27,7 @@ jobs:
           set -xe
           python -VV
           python -m site
-          python -m pip install --upgrade pip setuptools wheel cython
+          python -m pip install --upgrade pip setuptools wheel
           python -m pip install -r requirements.txt
           python -m pip install -r requirements.test.txt
       - name: "Run tests for ${{ matrix.python-version }}"
