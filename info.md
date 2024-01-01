@@ -43,6 +43,9 @@ This custom component automatically generates the following entities:
 {% if version_installed.replace("v", "").replace(".","") | int <= 15  %}
 * Please update to v0.16 when upgrading to Home Assistant 2023.5 or later.
 {% endif %}
+{% if version_installed.replace("v", "").replace(".","") | int <= 17  %}
+* Please update to v0.18 when upgrading to Home Assistant 2024.1 or later.
+{% endif %}
 {% endif %}
 
 ## Installation

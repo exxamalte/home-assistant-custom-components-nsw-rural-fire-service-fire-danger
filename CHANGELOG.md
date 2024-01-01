@@ -1,5 +1,9 @@
 # Changes
 
+## 0.18 (01/01/2024)
+* Fix for not correctly recognising Home Assistant 2024.1+.
+* Bump library version dependencies.
+
 ## 0.17 (05/05/2023)
 * Fix an issue where data is missing from the feed. If this is the case the respective sensor will show as state "unknown".
 
