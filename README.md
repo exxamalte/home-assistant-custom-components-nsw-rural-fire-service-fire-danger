@@ -25,11 +25,13 @@ This custom component automatically generates the following entities:
 Install this component via HACS, then go to "Configuration" -> "Integrations" and search for "NSW Rural Fire Service - Fire Danger".
 You have to select your district from the list, choose a feed, and then hit "Submit".
 
-There are currently two different feeds supported:
+There are currently three different feeds supported:
 * Standard: This provides a forecast for today and tomorrow only, and appears as a dedicated feed on the RFS's website.
 * Extended: This provides a forecast for 4 days, and is [used on the RFS's website](https://www.rfs.nsw.gov.au/fire-information/fdr-and-tobans). 
+* ACT Standard: While the Australian Capital Territory is included in the NSW RFS feed, it has in the past failed to include total fire bans declared by the 
+ACT Emergency Services Agency (ESA). As such this provides a forecast for today and tomorrow only using the ACT ESAs data feed.
 
-There is currently no option to switch between the two feeds, so please delete and recreate the configuration if you want to switch feeds.
+There is currently no option to switch between the three feeds, so please delete and recreate the configuration if you want to switch feeds.
 
 The actual feed contains the value "NONE" in case no rating has been issued. This is converted into `None` which has a special meaning in Python and hence in Home Assistant, 
 and which subsequently may cause confusion when used in automations. There is an option available when setting up this integration to automatically convert this into "No Rating" 

@@ -3,7 +3,7 @@ import logging
 
 import voluptuous as vol
 from homeassistant.config_entries import SOURCE_IMPORT, ConfigEntry
-from homeassistant.const import CONF_SCAN_INTERVAL
+from homeassistant.const import CONF_SCAN_INTERVAL, CONF_UNIQUE_ID
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.typing import ConfigType
@@ -21,6 +21,7 @@ from .const import (
     VALID_DATA_FEEDS,
 )
 from .coordinator import (
+    ActEsaFireDangerStandardFeedCoordinator,
     NswRfsFireDangerExtendedFeedCoordinator,
     NswRfsFireDangerFeedCoordinator,
     NswRfsFireDangerStandardFeedCoordinator,
@@ -59,7 +60,8 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     data_feed = conf.get(CONF_DATA_FEED, DEFAULT_DATA_FEED)
     convert_no_rating = conf.get(CONF_CONVERT_NO_RATING, DEFAULT_CONVERT_NO_RATING)
     scan_interval = conf.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
-    identifier = f"{district_name}"
+    identifier = conf.get(CONF_UNIQUE_ID, district_name)
+
     if identifier in configured_instances(hass):
         return True
 
@@ -88,6 +90,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         data_feed_coordinator = NswRfsFireDangerStandardFeedCoordinator(hass, entry)
     elif data_feed == "extended":
         data_feed_coordinator = NswRfsFireDangerExtendedFeedCoordinator(hass, entry)
+    elif data_feed == "act_standard":
+        data_feed_coordinator = ActEsaFireDangerStandardFeedCoordinator(hass, entry)
     else:
         raise NotImplementedError(f"Unsupported data feed type {data_feed} selected.")
     hass.data[DOMAIN][entry.entry_id] = data_feed_coordinator

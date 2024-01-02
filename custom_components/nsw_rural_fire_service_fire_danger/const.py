@@ -1,14 +1,16 @@
 """NSW Rural Fire Service - Fire Danger - Consts."""
-from datetime import timedelta
+from datetime import datetime, timedelta
 from typing import Final
 
 from homeassistant.const import Platform
+from homeassistant.util import dt as dt_util
 
 CONF_CONVERT_NO_RATING: Final = "convert_no_rating"
 CONF_DISTRICT_NAME: Final = "district_name"
 CONF_DATA_FEED: Final = "data_feed"
 
 DEFAULT_ATTRIBUTION: Final = "NSW Rural Fire Service"
+DEFAULT_ATTRIBUTION_ACT = "ACT Emergency Services Agency"
 
 DEFAULT_DATA_FEED: Final = "standard"
 
@@ -25,20 +27,39 @@ DOMAIN: Final = "nsw_rural_fire_service_fire_danger"
 XML_DISTRICT: Final = "District"
 XML_FIRE_DANGER_MAP: Final = "FireDangerMap"
 XML_NAME: Final = "Name"
+XML_RSS: Final = "rss"
+XML_CHANNEL: Final = "channel"
+XML_LAST_BUILD_DATE: Final = "lastBuildDate"
+XML_PUB_DATE: Final = "pubDate"
 XML_SENSOR_ATTRIBUTES: Final = {
     # <XML Key>: [<Display Name>, <Conversion Function>]
     "RegionNumber": ["region_number", lambda x, y: int(x)],
     "Councils": ["councils", lambda x, y: [z.strip() for z in x.split(";")]],
     "DangerLevelToday": [
         "danger_level_today",
-        lambda x, y: x.lower().capitalize() if x != "NONE" or not y else "No Rating",
+        lambda x, y: " ".join([w.lower().capitalize() for w in x.split(" ")])
+        if x != "NONE" or not y
+        else "No Rating",
     ],
     "DangerLevelTomorrow": [
         "danger_level_tomorrow",
-        lambda x, y: x.lower().capitalize() if x != "NONE" or not y else "No Rating",
+        lambda x, y: " ".join([w.lower().capitalize() for w in x.split(" ")])
+        if x != "NONE" or not y
+        else "No Rating",
     ],
     "FireBanToday": ["fire_ban_today", lambda x, y: x == "Yes"],
     "FireBanTomorrow": ["fire_ban_tomorrow", lambda x, y: x == "Yes"],
+}
+XML_EXTRA_ATTRIBUTES: Final = {
+    # <XML Key>: [<Display Name>, <Conversion Function>]
+    "lastBuildDate": [
+        "last_build_date",
+        lambda x, y: dt_util.as_utc(datetime.strptime(x, "%a, %d %b %Y %H:%M:%S %z")),
+    ],
+    "pubDate": [
+        "publish_date",
+        lambda x, y: dt_util.as_utc(datetime.strptime(x, "%a, %d %b %Y %H:%M:%S %z")),
+    ],
 }
 
 JSON_AREA_NAME = "areaName"
@@ -77,6 +98,7 @@ BINARY_SENSOR_TYPES_EXTENDED: Final = BINARY_SENSOR_TYPES_STANDARD + [
 BINARY_SENSOR_TYPES: Final = {
     "standard": BINARY_SENSOR_TYPES_STANDARD,
     "extended": BINARY_SENSOR_TYPES_EXTENDED,
+    "act_standard": BINARY_SENSOR_TYPES_STANDARD,
 }
 
 SENSOR_TYPES_STANDARD: Final = ["danger_level_today", "danger_level_tomorrow"]
@@ -87,6 +109,7 @@ SENSOR_TYPES_EXTENDED: Final = SENSOR_TYPES_STANDARD + [
 SENSOR_TYPES: Final = {
     "standard": SENSOR_TYPES_STANDARD,
     "extended": SENSOR_TYPES_EXTENDED,
+    "act_standard": SENSOR_TYPES_STANDARD,
 }
 
 TYPES: Final = {
@@ -107,11 +130,15 @@ COORDINATOR_TYPES = {"standard": "", "extended": ""}
 URL_DATA: Final = {
     "standard": "http://www.rfs.nsw.gov.au/feeds/fdrToban.xml",
     "extended": "https://www.rfs.nsw.gov.au/_designs/xml/fire-danger-ratings/fire-danger-ratings-v2",
+    "act_standard": "https://esa.act.gov.au/feeds/firedangerrating.xml",
 }
 
 URL_SERVICE: Final = "http://www.rfs.nsw.gov.au/"
+URL_SERVICE_ACT: Final = "https://esa.act.gov.au/"
 
-VALID_DATA_FEEDS: Final = ["standard", "extended"]
+
+VALID_DATA_FEEDS: Final = ["standard", "extended", "act_standard"]
+ACT_DATA_FEEDS: Final = ["act_standard"]
 
 VALID_DISTRICT_NAMES: Final = [
     "Far North Coast",
@@ -136,3 +163,6 @@ VALID_DISTRICT_NAMES: Final = [
     "South Western",
     "Far Western",
 ]
+
+ACT_IDENTIFIER_SUFFIX: Final = "ESA"
+ACT_DISTRICT_SUFFIX: Final = "(ESA)"
