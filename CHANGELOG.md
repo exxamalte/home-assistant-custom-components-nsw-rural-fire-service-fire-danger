@@ -1,5 +1,8 @@
 # Changes
 
+## 0.20 (12/09/2024)
+* Fix manifest files.
+
 ## 0.19 (11/09/2024)
 * Replaced a deprecated function which is going to be removed from Home Assistant 2025.8.
 * General code improvements.
