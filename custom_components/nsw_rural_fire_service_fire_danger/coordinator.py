@@ -9,8 +9,8 @@ from homeassistant.components.rest import RestData
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_SCAN_INTERVAL, MAJOR_VERSION, MINOR_VERSION
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.json import json_loads
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
+from homeassistant.util.json import json_loads
 from pyexpat import ExpatError
 
 from .const import (
