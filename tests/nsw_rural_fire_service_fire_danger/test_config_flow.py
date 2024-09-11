@@ -1,9 +1,10 @@
 """Define tests for the NSW Rural Fire Service - Fire Danger config flow."""
+
 from unittest.mock import patch
 
-import pytest
 from homeassistant import config_entries, data_entry_flow
 from homeassistant.const import CONF_SCAN_INTERVAL
+import pytest
 
 from custom_components.nsw_rural_fire_service_fire_danger import (
     CONF_DISTRICT_NAME,

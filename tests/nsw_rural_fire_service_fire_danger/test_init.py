@@ -1,9 +1,10 @@
 """Define tests for the NSW Rural Fire Service - Fire Danger general setup."""
+
 from unittest.mock import patch
 
-import pytest
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.core import HomeAssistant
+import pytest
 
 from custom_components.nsw_rural_fire_service_fire_danger.const import DOMAIN
 

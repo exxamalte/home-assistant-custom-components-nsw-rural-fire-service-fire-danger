@@ -1,7 +1,8 @@
 """Configuration for NSW Rural Fire Service - Fire Danger tests."""
-import pytest
+
 from homeassistant import loader
 from homeassistant.const import CONF_SCAN_INTERVAL
+import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.nsw_rural_fire_service_fire_danger.const import (
@@ -14,12 +15,13 @@ from custom_components.nsw_rural_fire_service_fire_danger.const import (
 
 
 @pytest.fixture(autouse=True)
-def auto_enable_custom_integrations(enable_custom_integrations):
-    yield
+def auto_enable_custom_integrations(enable_custom_integrations):  # noqa: PT004
+    """Auto-enable custom integrations."""
+    return
 
 
 @pytest.fixture
-def enable_custom_integrations(hass):
+def enable_custom_integrations(hass):  # noqa: PT004
     """Enable custom integrations defined in the test dir."""
     hass.data.pop(loader.DATA_CUSTOM_COMPONENTS)
 
