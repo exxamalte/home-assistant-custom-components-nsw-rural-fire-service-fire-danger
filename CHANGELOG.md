@@ -1,5 +1,9 @@
 # Changes
 
+## 0.19 (11/09/2024)
+* Replaced a deprecated function which is going to be removed from Home Assistant 2025.8.
+* General code improvements.
+
 ## 0.18 (01/01/2024)
 * Fix for not correctly recognising Home Assistant 2024.1+.
 * Bump library version dependencies.
