@@ -1,7 +1,5 @@
 {
   "name": "NSW Rural Fire Service - Fire Danger",
-  "domains": ["binary_sensor", "sensor"],
   "country": ["AU"],
-  "homeassistant": "2022.8.0",
-  "iot_class": ["Cloud Polling"]
+  "homeassistant": "2022.8.0"
 }

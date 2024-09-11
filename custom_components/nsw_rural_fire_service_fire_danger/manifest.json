@@ -2,17 +2,13 @@
   "domain": "nsw_rural_fire_service_fire_danger",
   "name": "NSW Rural Fire Service - Fire Danger",
   "after_dependencies": ["rest"],
-  "codeowners": [
-    "@exxamalte"
-  ],
+  "codeowners": ["@exxamalte"],
   "config_flow": true,
   "dependencies": [],
   "documentation": "https://github.com/exxamalte/home-assistant-custom-components-nsw-rural-fire-service-fire-danger",
   "integration_type": "service",
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/exxamalte/home-assistant-custom-components-nsw-rural-fire-service-fire-danger/issues",
-  "requirements": [
-    "xmltodict>=0.13.0"
-  ],
+  "requirements": ["xmltodict>=0.13.0"],
   "version": "0.19"
 }
