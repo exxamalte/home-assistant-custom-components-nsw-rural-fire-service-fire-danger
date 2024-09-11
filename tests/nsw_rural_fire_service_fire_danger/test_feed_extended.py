@@ -1,10 +1,9 @@
 """Define tests for the NSW Rural Fire Service - Fire Danger extended feed."""
-import logging
+
 from datetime import timedelta
 from http import HTTPStatus
+import logging
 
-import pytest
-import respx
 from homeassistant.const import (
     ATTR_ATTRIBUTION,
     ATTR_DEVICE_CLASS,
@@ -14,8 +13,9 @@ from homeassistant.const import (
 from homeassistant.core import HomeAssistant
 from homeassistant.setup import async_setup_component
 from homeassistant.util import utcnow
+import pytest
 from pytest_homeassistant_custom_component.common import async_fire_time_changed
-from tests.nsw_rural_fire_service_fire_danger.utils import load_fixture
+import respx
 
 from custom_components.nsw_rural_fire_service_fire_danger import (
     CONF_CONVERT_NO_RATING,
@@ -24,6 +24,7 @@ from custom_components.nsw_rural_fire_service_fire_danger import (
     DEFAULT_SCAN_INTERVAL,
     DOMAIN,
 )
+from tests.nsw_rural_fire_service_fire_danger.utils import load_fixture
 
 CONFIG_EXTENDED_SYDNEY = {
     DOMAIN: {
@@ -74,7 +75,7 @@ async def test_feed_extended(hass: HomeAssistant, config_entry):
     )
     await hass.async_block_till_done()
 
-    assert len(hass.states.async_all("binary_sensor")) == 4
+    assert len(hass.states.async_all("binary_sensor")) == 4  # noqa: PLR2004
 
     state = hass.states.get(
         "binary_sensor.fire_danger_greater_sydney_region_fire_ban_today"
@@ -188,7 +189,7 @@ async def test_feed_extended(hass: HomeAssistant, config_entry):
         "friendly_name": "Fire danger Greater Sydney Region Fire ban tomorrow",
     }
 
-    assert len(hass.states.async_all("sensor")) == 4
+    assert len(hass.states.async_all("sensor")) == 4  # noqa: PLR2004
 
     state = hass.states.get(
         "sensor.fire_danger_greater_sydney_region_danger_level_today"
