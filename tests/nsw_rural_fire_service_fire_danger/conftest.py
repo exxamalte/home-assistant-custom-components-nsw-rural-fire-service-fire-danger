@@ -1,5 +1,6 @@
 """Configuration for NSW Rural Fire Service - Fire Danger tests."""
 
+from aioresponses import aioresponses
 from homeassistant import loader
 from homeassistant.const import CONF_SCAN_INTERVAL
 import pytest
@@ -40,3 +41,10 @@ def config_entry():
         title="Greater Sydney Region",
         unique_id="Greater Sydney Region",
     )
+
+
+@pytest.fixture
+def mock_aioresponse():
+    """Return aioresponse fixture."""
+    with aioresponses() as m:
+        yield m
