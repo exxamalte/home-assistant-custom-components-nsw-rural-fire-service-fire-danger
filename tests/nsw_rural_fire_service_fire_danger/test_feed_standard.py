@@ -15,7 +15,7 @@ from homeassistant.setup import async_setup_component
 from homeassistant.util import utcnow
 import pytest
 from pytest_homeassistant_custom_component.common import async_fire_time_changed
-import respx
+from pytest_homeassistant_custom_component.test_util.aiohttp import AiohttpClientMocker
 
 from custom_components.nsw_rural_fire_service_fire_danger import (
     CONF_CONVERT_NO_RATING,
@@ -54,12 +54,15 @@ _LOGGER = logging.getLogger(__name__)
 
 
 @pytest.mark.asyncio
-@respx.mock
-async def test_feed_standard(hass: HomeAssistant, config_entry):
+async def test_feed_standard(
+    hass: HomeAssistant, aioclient_mock: AiohttpClientMocker, config_entry
+):
     """Test standard feed setup and entities."""
     await async_setup_component(hass, "homeassistant", {})
-    respx.get("http://www.rfs.nsw.gov.au/feeds/fdrToban.xml").respond(
-        status_code=HTTPStatus.OK, text=load_fixture("feed-1.xml")
+    aioclient_mock.get(
+        "http://www.rfs.nsw.gov.au/feeds/fdrToban.xml",
+        status=HTTPStatus.OK,
+        text=load_fixture("feed-1.xml"),
     )
     assert await async_setup_component(
         hass,
@@ -288,12 +291,15 @@ async def test_feed_standard(hass: HomeAssistant, config_entry):
 
 
 @pytest.mark.asyncio
-@respx.mock
-async def test_feed_standard_act(hass: HomeAssistant, config_entry):
+async def test_feed_standard_act(
+    hass: HomeAssistant, aioclient_mock: AiohttpClientMocker, config_entry
+):
     """Test standard feed setup and entities."""
     await async_setup_component(hass, "homeassistant", {})
-    respx.get("http://www.rfs.nsw.gov.au/feeds/fdrToban.xml").respond(
-        status_code=HTTPStatus.OK, text=load_fixture("feed-1.xml")
+    aioclient_mock.get(
+        "http://www.rfs.nsw.gov.au/feeds/fdrToban.xml",
+        status=HTTPStatus.OK,
+        text=load_fixture("feed-1.xml"),
     )
     assert await async_setup_component(
         hass,
@@ -324,12 +330,15 @@ async def test_feed_standard_act(hass: HomeAssistant, config_entry):
 
 
 @pytest.mark.asyncio
-@respx.mock
-async def test_feed_standard_missing_data(hass: HomeAssistant, config_entry):
+async def test_feed_standard_missing_data(
+    hass: HomeAssistant, aioclient_mock: AiohttpClientMocker, config_entry
+):
     """Test standard feed setup and entities."""
     await async_setup_component(hass, "homeassistant", {})
-    respx.get("http://www.rfs.nsw.gov.au/feeds/fdrToban.xml").respond(
-        status_code=HTTPStatus.OK, text=load_fixture("feed-1.xml")
+    aioclient_mock.get(
+        "http://www.rfs.nsw.gov.au/feeds/fdrToban.xml",
+        status=HTTPStatus.OK,
+        text=load_fixture("feed-1.xml"),
     )
     assert await async_setup_component(
         hass,
@@ -355,12 +364,15 @@ async def test_feed_standard_missing_data(hass: HomeAssistant, config_entry):
 
 
 @pytest.mark.asyncio
-@respx.mock
-async def test_feed_standard_invalid(hass: HomeAssistant, config_entry):
+async def test_feed_standard_invalid(
+    hass: HomeAssistant, aioclient_mock: AiohttpClientMocker, config_entry
+):
     """Test standard feed setup and entities."""
     await async_setup_component(hass, "homeassistant", {})
-    respx.get("http://www.rfs.nsw.gov.au/feeds/fdrToban.xml").respond(
-        status_code=HTTPStatus.OK, text="NOT XML"
+    aioclient_mock.get(
+        "http://www.rfs.nsw.gov.au/feeds/fdrToban.xml",
+        status=HTTPStatus.OK,
+        text="NOT XML",
     )
     assert await async_setup_component(
         hass,
