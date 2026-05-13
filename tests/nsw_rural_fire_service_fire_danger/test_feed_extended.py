@@ -14,7 +14,10 @@ from homeassistant.core import HomeAssistant
 from homeassistant.setup import async_setup_component
 from homeassistant.util import utcnow
 import pytest
-from pytest_homeassistant_custom_component.common import async_fire_time_changed
+from pytest_homeassistant_custom_component.common import (
+    async_fire_time_changed,
+    load_fixture,
+)
 from pytest_homeassistant_custom_component.test_util.aiohttp import AiohttpClientMocker
 
 from custom_components.nsw_rural_fire_service_fire_danger import (
@@ -24,7 +27,6 @@ from custom_components.nsw_rural_fire_service_fire_danger import (
     DEFAULT_SCAN_INTERVAL,
     DOMAIN,
 )
-from tests.nsw_rural_fire_service_fire_danger.utils import load_fixture
 
 CONFIG_EXTENDED_SYDNEY = {
     DOMAIN: {
@@ -59,7 +61,6 @@ async def test_feed_extended(
     hass: HomeAssistant, aioclient_mock: AiohttpClientMocker, config_entry
 ):
     """Test extended feed setup and entities."""
-    await async_setup_component(hass, "homeassistant", {})
     aioclient_mock.get(
         "https://www.rfs.nsw.gov.au/_designs/xml/fire-danger-ratings/fire-danger-ratings-v2",
         status=HTTPStatus.OK,
@@ -312,7 +313,6 @@ async def test_feed_extended_act(
     hass: HomeAssistant, aioclient_mock: AiohttpClientMocker, config_entry
 ):
     """Test standard feed setup and entities."""
-    await async_setup_component(hass, "homeassistant", {})
     aioclient_mock.get(
         "https://www.rfs.nsw.gov.au/_designs/xml/fire-danger-ratings/fire-danger-ratings-v2",
         status=HTTPStatus.OK,
@@ -355,7 +355,6 @@ async def test_feed_extended_missing_data(
     hass: HomeAssistant, aioclient_mock: AiohttpClientMocker, config_entry
 ):
     """Test standard feed setup and entities."""
-    await async_setup_component(hass, "homeassistant", {})
     aioclient_mock.get(
         "https://www.rfs.nsw.gov.au/_designs/xml/fire-danger-ratings/fire-danger-ratings-v2",
         status=HTTPStatus.OK,
@@ -397,7 +396,6 @@ async def test_feed_extended_invalid(
     hass: HomeAssistant, aioclient_mock: AiohttpClientMocker, config_entry
 ):
     """Test extended feed setup and entities."""
-    await async_setup_component(hass, "homeassistant", {})
     aioclient_mock.get(
         "https://www.rfs.nsw.gov.au/_designs/xml/fire-danger-ratings/fire-danger-ratings-v2",
         status=HTTPStatus.OK,

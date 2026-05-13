@@ -14,7 +14,10 @@ from homeassistant.core import HomeAssistant
 from homeassistant.setup import async_setup_component
 from homeassistant.util import utcnow
 import pytest
-from pytest_homeassistant_custom_component.common import async_fire_time_changed
+from pytest_homeassistant_custom_component.common import (
+    async_fire_time_changed,
+    load_fixture,
+)
 from pytest_homeassistant_custom_component.test_util.aiohttp import AiohttpClientMocker
 
 from custom_components.nsw_rural_fire_service_fire_danger import (
@@ -24,7 +27,6 @@ from custom_components.nsw_rural_fire_service_fire_danger import (
     DEFAULT_SCAN_INTERVAL,
     DOMAIN,
 )
-from tests.nsw_rural_fire_service_fire_danger.utils import load_fixture
 
 CONFIG_STANDARD_SYDNEY = {
     DOMAIN: {
@@ -54,11 +56,8 @@ _LOGGER = logging.getLogger(__name__)
 
 
 @pytest.mark.asyncio
-async def test_feed_standard(
-    hass: HomeAssistant, aioclient_mock: AiohttpClientMocker, config_entry
-):
+async def test_feed_standard(hass: HomeAssistant, aioclient_mock: AiohttpClientMocker):
     """Test standard feed setup and entities."""
-    await async_setup_component(hass, "homeassistant", {})
     aioclient_mock.get(
         "http://www.rfs.nsw.gov.au/feeds/fdrToban.xml",
         status=HTTPStatus.OK,
@@ -292,10 +291,9 @@ async def test_feed_standard(
 
 @pytest.mark.asyncio
 async def test_feed_standard_act(
-    hass: HomeAssistant, aioclient_mock: AiohttpClientMocker, config_entry
+    hass: HomeAssistant, aioclient_mock: AiohttpClientMocker
 ):
     """Test standard feed setup and entities."""
-    await async_setup_component(hass, "homeassistant", {})
     aioclient_mock.get(
         "http://www.rfs.nsw.gov.au/feeds/fdrToban.xml",
         status=HTTPStatus.OK,
@@ -331,10 +329,9 @@ async def test_feed_standard_act(
 
 @pytest.mark.asyncio
 async def test_feed_standard_missing_data(
-    hass: HomeAssistant, aioclient_mock: AiohttpClientMocker, config_entry
+    hass: HomeAssistant, aioclient_mock: AiohttpClientMocker
 ):
     """Test standard feed setup and entities."""
-    await async_setup_component(hass, "homeassistant", {})
     aioclient_mock.get(
         "http://www.rfs.nsw.gov.au/feeds/fdrToban.xml",
         status=HTTPStatus.OK,
@@ -365,10 +362,10 @@ async def test_feed_standard_missing_data(
 
 @pytest.mark.asyncio
 async def test_feed_standard_invalid(
-    hass: HomeAssistant, aioclient_mock: AiohttpClientMocker, config_entry
+    hass: HomeAssistant, aioclient_mock: AiohttpClientMocker
 ):
     """Test standard feed setup and entities."""
-    await async_setup_component(hass, "homeassistant", {})
+    aioclient_mock.clear_requests()
     aioclient_mock.get(
         "http://www.rfs.nsw.gov.au/feeds/fdrToban.xml",
         status=HTTPStatus.OK,
