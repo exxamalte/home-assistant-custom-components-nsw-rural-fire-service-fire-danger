@@ -1,5 +1,10 @@
 # Changes
 
+## 0.21 (14/05/2026)
+* Code quality improvements.
+* Now requires at least Home Assistant 2026.5.1.
+* Bump library version dependencies.
+
 ## 0.20 (12/09/2024)
 * Fix manifest files.
 
