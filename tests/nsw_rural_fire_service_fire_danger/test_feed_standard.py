@@ -365,7 +365,6 @@ async def test_feed_standard_invalid(
     hass: HomeAssistant, aioclient_mock: AiohttpClientMocker
 ):
     """Test standard feed setup and entities."""
-    aioclient_mock.clear_requests()
     aioclient_mock.get(
         "http://www.rfs.nsw.gov.au/feeds/fdrToban.xml",
         status=HTTPStatus.OK,
